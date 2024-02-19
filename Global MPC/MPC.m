@@ -1,0 +1,213 @@
+%% Run global MPC, by utilzing the different function made 
+%Tilføje at man kan se nuværende el regning og fremtid elregning! 
+%% Defining some constants values
+%Syntes ikke MPC vælger den billigest løsning så det er et problem! 
+
+clear 
+clf
+clc
+%Loading in standardConstants!
+c=standardConstants();
+
+%Initicaly volumen: 
+V=c.V;
+
+%Defining simulation time (in Hours!) 
+Tsim=7*24;
+
+%Adding path to the function 
+addpath('Functions\'); 
+
+%If it is desired to export graph set it to true els false  
+exportGraphs=true; 
+
+% If it is desired to have a progressbar
+ProgesBar=true;
+
+% If true makes a gif 
+makeGif=true; 
+%% Setting up the simulation
+% Making a index 
+index=1;
+
+% Setting up initial values 
+u=zeros(c.Nu,1); 
+AlreadyPumpedOneDay=zeros(c.Nu,1);
+CurrentDay=0;
+CurrentTime(index)=0;
+%Starting progressbar 
+if ProgesBar==true
+progressbar; 
+end 
+%Setting consumption to zero for the first time
+firstTime=0; 
+d(:,:,index)=zeros(c.Nc,1);
+dNoise(:,:,index)=zeros(c.Nc,1);
+
+%Start Bill 
+Bill=0; 
+%Making the simulation. 
+for time=1:3600/c.ts*Tsim
+    %Updating the current time starting with a time of zero
+     CurrentTime(index+1)=c.ts+CurrentTime(index); 
+        if CurrentTime(index+1) >=24*3600 
+            CurrentTime(index+1)=0; 
+            AlreadyPumpedOneDay(:,index)=zeros(c.Nu,1);
+            CurrentDay=CurrentDay+1; 
+        end 
+    %Determining the consumption for the demand
+    [d(:,:,index+1),dNoise(:,:,index+1)]=consumption(CurrentTime(index+1),d(:,:,index),firstTime,dNoise(:,:,index));
+    firstTime=1;
+    %Taking out only the current consumption
+    dCurrent(index,1)=d(1,1,index+1);
+    dNoiseCurrent(index,1)=dNoise(1,1,index+1);
+    %Making vector of the eletricty prices
+    ElPrices(:,index)=ElectrictyPrices(CurrentTime(index+1),CurrentDay);
+    %Saving current eletricty price:
+    Elcurrent(index,1)=ElPrices(1,index);
+    %Running the MPC to determine the next input 
+    [u(:,index+1), uAll(:,:,index)] = mpcRun(V(index,1),d(:,:,index+1),CurrentTime(index+1),AlreadyPumpedOneDay(:,index),ElPrices(:,index),u(:,index));
+    %Updating the amount which have been pumped 
+    AlreadyPumpedOneDay(:,index+1)=AlreadyPumpedOneDay(:,index)+u(:,index+1)*c.ts; 
+    %Determing the next water level based on the determined input
+    V(index+1,1) = Model(V(index,1),u(:,index+1),dNoise(1,1,index+1));
+    %Predicting for the entire control horizion 
+    Vc(:,index)=ModelPredicted(V(index,1),uAll(:,:,index)',dNoise(:,:,index+1));
+    %Determine eletrict bill 
+    [BillTemp(:,index), BillPred(:,index)]= eletrictyBill(uAll(:,:,index),ElPrices(:,index)); 
+    Bill(index+1,1)=Bill(index,1)+BillTemp(:,index); 
+    BillPred(:,index)=BillPred(:,index)+Bill(index,1); 
+    %Hopefully making a gif 
+    if makeGif==true
+    plotsToGif(V(1:index+1,1),Vc(:,index),Tsim,u,uAll(:,:,index)',dCurrent,d(:,:,index+1),Elcurrent,ElPrices(:,index),Bill,BillPred(:,index),dNoiseCurrent,dNoise(:,:,index+1))
+    end 
+    %Updating the index
+    index=index+1; 
+    %Updating progessbar 
+    if ProgesBar==true
+    progressbar(time/(3600/c.ts*Tsim))
+    end 
+end 
+
+
+
+%% Making some gorgeous plots
+
+% Starting by taking out the important prices and consumption 
+for index=1:Tsim
+    comsumption(index,1)=d(1,1,index+1); 
+    comsumptionNoise(index,1)=dNoise(1,1,index+1);
+    ElPric(index,1)=ElPrices(1,index); 
+end 
+
+%Removing first row in U (inital pumps mass flows), and summing up
+uTogehter=u(:,2:end); 
+uTogehter=sum(uTogehter); 
+set(0, 'DefaultAxesFontName', 'Times');
+
+
+% Making plots
+clf 
+f=figure;
+subplot(2,1,1); 
+hold on 
+stairs(uTogehter)
+stairs(comsumption)
+stairs(comsumptionNoise)
+ylabel('Mass flow [m^{3}/s]')
+yyaxis right
+stairs(ElPric)
+ylabel('Eletricty prices [Euro]')
+grid 
+hold off 
+legend('Summed pump mass flow','Consumption','Consumption with noise','Eletricty price','Location','best') 
+xlabel('Samples [*]')
+
+subplot(2,1,2);
+hold on 
+plot(V(2:end,1))
+yline(c.hmax*c.At)
+yline(c.hmin*c.At)
+hold off 
+ylabel('Volumen [m^{3}]')
+xlabel('Samples [*]')
+grid on
+ylim([260 550])
+legend('Volumen','Constraints','Location','best')
+if exportGraphs==true 
+exportgraphics(f,'Results/Volumen_and_total_pumps.pdf')
+end 
+%% 
+clf 
+f=figure;
+subplot(3,1,1) 
+hold on
+stairs(u(1,2:end))
+yline(c.umax1)
+yline(c.umin1)
+grid on 
+hold off 
+ylim([-0.002 0.012])
+ylabel('Pump mass flow [m^{3}/s]')
+xlabel('Samples [*]')
+legend('Pump mass flow','Constraints','Location','best')
+
+
+subplot(3,1,2)
+hold on 
+stairs(u(2,2:end))
+yline(c.umax2)
+yline(c.umin2)
+grid on
+hold off 
+ylim([-0.002 0.012])
+ylabel('Pump mass flow [m^{3}/s]')
+xlabel('Samples [*]')
+legend('Pump mass flow','Constraints','Location','best')
+
+subplot(3,1,3)
+hold on 
+stairs(u(3,2:end))
+yline(c.umax3)
+yline(c.umin3)
+grid on
+hold off 
+ylim([-0.002 0.012])
+ylabel('Pump mass flow [m^{3}/s]')
+xlabel('Samples [*]')
+legend('Pump mass flow','Constraints','Location','best')
+
+if exportGraphs==true 
+exportgraphics(f,'Results/pumps_flows.pdf')
+end 
+%% 
+clf 
+f=figure;
+hold on 
+plot(AlreadyPumpedOneDay(1,2:end)) 
+plot(AlreadyPumpedOneDay(2,2:end))
+plot(AlreadyPumpedOneDay(3,2:end))
+yline(c.TdMax1,'g')
+yline(c.TdMax2,'r')
+yline(c.TdMax3,'y')
+grid 
+hold off 
+ylabel('Pump during one day [m^{3}]')
+xlabel('Samples [*]')
+legend('Pumpe 1','Pumpe 2','Pumpe 3','Constraint 1','Constraint 2','Constraint 3','Location','best')
+
+if exportGraphs==true 
+exportgraphics(f,'Results/Amount_pumped_one_day.pdf')
+end 
+%% Plotting eletricty bill 
+clf 
+plot(Bill(2:end,1)) 
+grid on 
+xlabel('Samples [*]')
+ylabel('Eletricty bill [Euro]') 
+if exportGraphs==true 
+exportgraphics(f,'Results/eletricty_bill.pdf')
+end 
+
+
+
