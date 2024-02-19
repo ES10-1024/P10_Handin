@@ -19,4 +19,6 @@ EletrictyPrices gives a vector of the needed electricity prices for the controll
 
 DayLimitPumps returns a matrix with ones and zeros, used to add up the amount pumped for each pump station, dependent on the time of day. 
 
-consumption, returns a vector of the predicted consumptions for the controller horizon here, an average of the variance and mean is made if the sample time is above 15 minutes.  
+consumption, returns a vector of the predicted consumptions for the controller horizon here, an average of the variance and mean is made if the sample time is above 15 minutes.  It also returns a consumption with added noise  
+
+plotsToGif, makes a Gif of the running controller 
