@@ -10,11 +10,11 @@ clc
 %Loading in standardConstants!
 c=standardConstants();
 
-%Initicaly volume: 
+%Initicaly volumen: 
 V=c.V;
 
 %Defining simulation time (in Hours!) 
-Tsim=7*24;
+Tsim=24;
 
 %Adding path to the function 
 addpath('Functions\'); 
@@ -62,9 +62,9 @@ for time=1:3600/c.ts*Tsim
     %Taking out only the current consumption
     dCurrent(index,1)=d(1,1,index+1);
     dNoiseCurrent(index,1)=dNoise(1,1,index+1);
-    %Making vector of the electricity prices
+    %Making vector of the eletricty prices
     ElPrices(:,index)=ElectrictyPrices(CurrentTime(index+1),CurrentDay);
-    %Saving current electricity price:
+    %Saving current eletricty price:
     Elcurrent(index,1)=ElPrices(1,index);
     %Running the MPC to determine the next input 
     [u(:,index+1), uAll(:,:,index)] = mpcRun(V(index,1),d(:,:,index+1),CurrentTime(index+1),AlreadyPumpedOneDay(:,index),ElPrices(:,index),u(:,index));
@@ -74,7 +74,7 @@ for time=1:3600/c.ts*Tsim
     V(index+1,1) = Model(V(index,1),u(:,index+1),dNoise(1,1,index+1));
     %Predicting for the entire control horizion 
     Vc(:,index)=ModelPredicted(V(index,1),uAll(:,:,index)',dNoise(:,:,index+1));
-    %Determine electricity bill 
+    %Determine eletrict bill 
     [BillTemp(:,index), BillPred(:,index)]= eletrictyBill(uAll(:,:,index),ElPrices(:,index)); 
     Bill(index+1,1)=Bill(index,1)+BillTemp(:,index); 
     BillPred(:,index)=BillPred(:,index)+Bill(index,1); 
@@ -105,7 +105,6 @@ end
 uTogehter=u(:,2:end); 
 uTogehter=sum(uTogehter); 
 set(0, 'DefaultAxesFontName', 'Times');
-set(0, 'DefaultLegendFontName', 'Times');
 
 
 % Making plots
@@ -117,10 +116,10 @@ stairs(uTogehter)
 ylabel('Mass flow [m^{3}/s]')
 yyaxis right
 stairs(ElPric)
-ylabel('Electricity prices [Euro]')
+ylabel('Eletricty prices [Euro]')
 grid 
 hold off 
-legend('Summed pump mass flow','Electricity price') 
+legend('\fontname{'Times New Roman'}Summed pump mass flow','Consumption','Consumption with noise','Eletricty price','Location','best') 
 xlabel('Samples [*]')
 
 subplot(3,1,2); 
@@ -131,7 +130,7 @@ hold off
 grid 
 ylabel('Mass flow [m^{3}/s]')
 xlabel('Samples [*]')
-legend('MPC consumption','Model consumption') 
+legend('MPC consumption','Model consumption','Location','best') 
 
 
 
@@ -142,11 +141,11 @@ plot(V(2:end,1))
 yline(c.hmax*c.At)
 yline(c.hmin*c.At)
 hold off 
-ylabel('Volume [m^{3}]')
+ylabel('Volumen [m^{3}]')
 xlabel('Samples [*]')
 grid on
 ylim([260 550])
-legend('Volume','Constraints')
+legend('Volumen','Constraints','Location','best')
 if exportGraphs==true 
 exportgraphics(f,'Results/Volumen_and_total_pumps.pdf')
 end 
@@ -163,7 +162,7 @@ hold off
 ylim([-0.002 0.012])
 ylabel('Pump mass flow [m^{3}/s]')
 xlabel('Samples [*]')
-legend('Pump mass flow','Constraints')
+legend('Pump mass flow','Constraints','Location','best')
 
 
 subplot(3,1,2)
@@ -176,7 +175,7 @@ hold off
 ylim([-0.002 0.012])
 ylabel('Pump mass flow [m^{3}/s]')
 xlabel('Samples [*]')
-legend('Pump mass flow','Constraints')
+legend('Pump mass flow','Constraints','Location','best')
 
 subplot(3,1,3)
 hold on 
@@ -188,7 +187,7 @@ hold off
 ylim([-0.002 0.012])
 ylabel('Pump mass flow [m^{3}/s]')
 xlabel('Samples [*]')
-legend('Pump mass flow','Constraints')
+legend('Pump mass flow','Constraints','Location','best')
 
 if exportGraphs==true 
 exportgraphics(f,'Results/pumps_flows.pdf')
@@ -207,17 +206,17 @@ grid
 hold off 
 ylabel('Pump during one day [m^{3}]')
 xlabel('Samples [*]')
-legend('Pumpe 1','Pumpe 2','Pumpe 3','Constraint 1','Constraint 2','Constraint 3')
+legend('Pumpe 1','Pumpe 2','Pumpe 3','Constraint 1','Constraint 2','Constraint 3','Location','best')
 
 if exportGraphs==true 
 exportgraphics(f,'Results/Amount_pumped_one_day.pdf')
 end 
-%% Plotting electricity bill 
+%% Plotting eletricty bill 
 clf 
 plot(Bill(2:end,1)) 
 grid on 
 xlabel('Samples [*]')
-ylabel('Electricity bill [Euro]') 
+ylabel('Eletricty bill [Euro]') 
 if exportGraphs==true 
 exportgraphics(f,'Results/eletricty_bill.pdf')
 end 
