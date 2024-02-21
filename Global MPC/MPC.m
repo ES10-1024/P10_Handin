@@ -41,7 +41,6 @@ if ProgesBar==true
 progressbar; 
 end 
 %Setting consumption to zero for the first time
-firstTime=0; 
 d(:,:,index)=zeros(c.Nc,1);
 dNoise(:,:,index)=zeros(c.Nc,1);
 
@@ -57,8 +56,7 @@ for time=1:3600/c.ts*Tsim
             CurrentDay=CurrentDay+1; 
         end 
     %Determining the consumption for the demand
-    [d(:,:,index+1),dNoise(:,:,index+1)]=consumption(CurrentTime(index+1),d(:,:,index),firstTime,dNoise(:,:,index));
-    firstTime=1;
+    [d(:,:,index+1),dNoise(:,:,index+1)]=consumption(CurrentTime(index+1),CurrentDay);
     %Taking out only the current consumption
     dCurrent(index,1)=d(1,1,index+1);
     dNoiseCurrent(index,1)=dNoise(1,1,index+1);

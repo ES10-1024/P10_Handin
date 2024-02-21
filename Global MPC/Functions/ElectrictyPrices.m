@@ -12,9 +12,13 @@ CurrentTimeHours=floor(currentTime/3600);
 c=standardConstants();
 
 %% Loading in the eletricty prices
-load("ElectrictyPrices.mat")
-%Going from MWh to kWh: 
-Data.NewPrice=Data.NewPrice/1000; 
+ElpriceAlot=load("ElPrice.mat");
+% Data=load("ElectrictyPrices.mat");
+% Data=Data.Data;
+% %Going from MWh to kWh: 
+% Data.NewPrice=Data.NewPrice/1000; 
+Data.NewPrice=ElpriceAlot.Elprice;
+
 
 
 %% Making vector of eletricty prices 
@@ -25,7 +29,7 @@ TimeHours=(CurrentTimeHours)+24*CurrentDay+1;
 TimeNextHour=3600*(currentTime/3600-CurrentTimeHours); 
 
 %Maing a for loop to make the vector of eletricty prices
-
+ElPrices=zeros(c.Nc,1);
 for index=1:c.Nc 
     %Load the eletricty into the vector
     ElPrices(index,1)=Data.NewPrice(TimeHours,1); 

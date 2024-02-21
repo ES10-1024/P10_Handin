@@ -63,7 +63,8 @@ constants.Nd=1;
 %initial water level [m]
 constants.h=1.5; 
 %Inital volumen [m^c]
-constants.V=constants.h*constants.At; 
+%constants.V=constants.h*constants.At; 
+constants.V=405;
 %% noise for consumpition model
 constants.NoiseMean=0; 
 constants.NoiseVariance=4; 
@@ -84,8 +85,8 @@ constants.ts=3600;
 constants.Nc_hours = 24; %To Be Updated!
 
 % Defining control horizion in samples 
-constants.Nc = constants.Nc_hours*3600/constants.ts; 
-
+%constants.Nc = constants.Nc_hours*3600/constants.ts; 
+constants.Nc = 24; 
 
 
 end

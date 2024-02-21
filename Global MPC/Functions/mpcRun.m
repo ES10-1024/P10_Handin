@@ -110,5 +110,4 @@ solution = solve(Problem,init);
 up1=solution.U(1,:)'; 
 uAll=solution.U;
 
-
 end

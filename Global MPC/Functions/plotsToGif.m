@@ -108,7 +108,7 @@ xlim([0 MaxX])
 grid 
 xlabel('Samples [*]')
 ylabel('Volume [m^{3}]')
-ylim([260 550])
+ylim([220 600])
 legend('Volume','Constraints')
 title('Water volume')
 
