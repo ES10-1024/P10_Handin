@@ -4,12 +4,13 @@ function [ElPrices] = ElectrictyPrices(currentTime)
 % Input
 % currentTime The current Time in seconds! 
 
+%Loading in scaled standard constants 
+c=scaled_standard_constants();
+
 %  Elprices a vector of eletricity prices for the entire control horzion 
 %Setting the output to zero, beacuse Simulink needs it: 
 ElPrices=zeros(c.Nc,1);
 
-%Loading in scaled standard constants 
-c=scaled_standard_constants();
 
 %% Determine the start entire for electricity price: 
 CurrentTimeHours=floor(currentTime*c.AccTime/3600)+1;   

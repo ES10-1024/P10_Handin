@@ -6,7 +6,6 @@ clc
 clear
 close all
 %% Adding path and standard values
-addpath("Global controller\Simple Simulink implemtation\Functions\")
 c=scaled_standard_constants; 
 %% Define the amount of scaled hours it is desired to simulate for: 
 simHour=72; 
@@ -44,12 +43,12 @@ f=figure
 subplot(3,1,1)
 hold on
 yyaxis left
-ylabel('Mass flow [m^{3}/h]' )
+ylabel('Sumed pump flow [m^{3}/h]' )
 stairs(summedMassflow) 
 yyaxis right 
 ylabel('El Prices [Euro/kWh]') 
 stairs(ElPrices)
-xlabel('Hours scaled') 
+xlabel('Time [h_{a}]') 
 grid 
 xlim([0 72])
 hold off 
@@ -66,7 +65,7 @@ legend('Volume','Constraints')
 ylabel('Volume [m^{3}]') 
 xlim([0 72])
 grid 
-xlabel('Hours scaled') 
+xlabel('Time [h_{a}]') 
 set(gca,'fontname','times')
 
 %Predicted consumption and presented consumption
@@ -79,7 +78,7 @@ grid
 legend('Predicted consumption','Actual consumption')
 xlim([0 72])
 ylabel('Mass flow [m^{3}/h]' )
-xlabel('Hours scaled') 
+xlabel('Time [h_{a}]') 
 set(gca,'fontname','times')
 
 
