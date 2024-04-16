@@ -76,7 +76,7 @@ constants.NoiseVariance=4;
 
 
 %Defining wired K in the cost function
-constants.K=450;% 450; %450; %800
+constants.K=900;% 450; %450; %800
 
 %Weight for the price term
 constants.Kp=1; 

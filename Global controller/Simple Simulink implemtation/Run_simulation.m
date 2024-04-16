@@ -5,6 +5,17 @@ clf
 clc 
 clear
 close all
+%adding a few path: 
+addpath("..\..\")
+addpath("..\..\Global controller\")
+
+addpath("..\..\log\")
+addpath("log\")
+
+addpath("Functions\")
+addpath("..\Subsystem Reference\")
+
+
 %% Adding path and standard values
 c=scaled_standard_constants; 
 %% Define the amount of scaled hours it is desired to simulate for: 
