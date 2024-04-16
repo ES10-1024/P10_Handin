@@ -17,15 +17,17 @@ c=scaled_standard_constants;
 hour=165;  
 currentTime=hour*c.ts;
 
+%Only working with the current and one future time step: 
+c.Nc=2;
+
 %Getting the electricty and demand 
 [c.Je] = ElectrictyPrices(currentTime); 
-c.Je=c.Je(1,1); 
+c.Je=c.Je/norm(c.Je); 
+c.Je=c.Je(1:c.Nc); 
 
 [c.d,consumptionNoise] = consumption(currentTime);
 c.d=c.d(1,1); 
 
-%Only working with the current and one future time step: 
-c.Nc=2;
 
 %% Making A and v matrices for the optimization problem 
 
