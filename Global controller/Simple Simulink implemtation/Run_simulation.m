@@ -54,10 +54,10 @@ f=figure
 subplot(3,1,1)
 hold on
 yyaxis left
-ylabel('Sumed pump flow [m^{3}/h]' )
+ylabel('Summed pump flow [m^{3}/h]' )
 stairs(summedMassflow) 
 yyaxis right 
-ylabel('El Prices [Euro/kWh]') 
+ylabel('Electri prices [Euro/kWh]') 
 stairs(ElPrices)
 xlabel('Time [h_{a}]') 
 grid 
@@ -86,14 +86,14 @@ stairs(consumptionPred)
 stairs(consumptionNoise)
 hold off 
 grid 
-legend('Predicted consumption','Actual consumption')
+legend('Predicted flow','Actual flow')
 xlim([0 72])
 ylabel('Mass flow [m^{3}/h]' )
 xlabel('Time [h_{a}]') 
 set(gca,'fontname','times')
 
-
-
+a = annotation('rectangle',[0 0 1 1],'Color','w');
 
 exportgraphics(f,'global_controller_scaled_with_disturbance_with_Kappa.pdf')
 
+delete(a)

@@ -151,3 +151,4 @@ yline(0)
 hold off 
 
 
+save("check_for_convexity_1.mat")
