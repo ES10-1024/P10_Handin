@@ -99,24 +99,26 @@ if scaled == false
 
 
     %Defining part which is about the elevation and water height: 
-    height1=@(u) c.g0*c.rhoW*(h(u)+c.z1);
+    height1=@(u) c.A_31*u/3600.*(c.g0*c.rhoW*(h(u)+c.z1));
     
-    height2=@(u) c.g0*c.rhoW*(h(u)+c.z2); 
+    height2=@(u) c.A_32*u/3600.*(c.g0*c.rhoW*(h(u)+c.z2)); 
     
     %Defining  part due to pipe resitance which is separated: 
-    PipeResistance1= @(u) c.rf1*c.A_31*(u.*abs(u)); 
+    PipeResistance1= @(u) c.rf1*c.A_31*(u.*abs(u).*abs(u)); 
     
-    PipeResistance2= @(u) c.rf2*c.A_32*(u.*abs(u)); 
+    PipeResistance2= @(u) c.rf2*c.A_32*(u.*abs(u).*abs(u)); 
     
     %Definine pipe resistance with both flows presented: 
-    PipeResistanceTogether= @(u) c.rfTogether*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d)); 
+    PipeResistanceTogether1= @(u) c.A_31*u/3600.*c.rfTogether*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d)); 
+    PipeResistanceTogether2= @(u) c.A_32*u/3600.*c.rfTogether*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d)); 
+
     
     
     %Defining the cost function for the two pumps: 
     %Pump 1
-    Jl1= @(u) c.ts*ones(1,c.Nc)*(c.e1*c.Je/(3600*1000).*(c.A_31*u/3600.*(PipeResistance1(u)+PipeResistanceTogether(u)+height1(u)))); 
+    Jp1= @(u) c.ts*(1/c.eta1*c.Je'/(3600*1000)*((PipeResistance1(u)+PipeResistanceTogether1(u)+height1(u)))); 
     %Pump 2 
-    Jl2= @(u) c.ts*ones(1,c.Nc)*(c.e2*c.Je/(3600*1000).*(c.A_32*u/3600.*(PipeResistance2(u)+PipeResistanceTogether(u)+height2(u)))); 
+    Jp2= @(u) c.ts*(1/c.eta2*c.Je'/(3600*1000)*(c.A_32*u/3600.*(PipeResistance2(u)+PipeResistanceTogether2(u)+height2(u)))); 
     
     %setting the allowed max evaluation for the solver higher due to the
     %cost function not being scaled, and setting the alogrithm to be sqp: 
@@ -124,24 +126,26 @@ if scaled == false
 
 else 
     %Defining part which is about the elevation and water height: 
-    height1=@(u) c.g0*c.rhoW/10000*(h(u)+c.z1);
+    height1=@(u) c.A_31*u.*(c.g0*c.rhoW/10000*(h(u)+c.z1));
     
-    height2=@(u) c.g0*c.rhoW/10000*(h(u)+c.z2); 
+    height2=@(u) c.A_32*u.*(c.g0*c.rhoW/10000*(h(u)+c.z2)); 
     
     %Defining  part due to pipe resitance which is separated: 
-    PipeResistance1= @(u) c.rf1/10000*c.A_31*(u.*abs(u)); 
+    PipeResistance1= @(u) c.rf1/10000*c.A_31*(u.*abs(u).*abs(u)); 
     
-    PipeResistance2= @(u) c.rf2/10000*c.A_32*(u.*abs(u)); 
+    PipeResistance2= @(u) c.rf2/10000*c.A_32*(u.*abs(u).*abs(u)); 
     
     %Definine pipe resistance with both flows presented: 
-    PipeResistanceTogether= @(u) c.rfTogether/10000*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d)); 
+    PipeResistanceTogether1= @(u) c.A_31*u.*(c.rfTogether/10000*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d))); 
+    PipeResistanceTogether2= @(u) c.A_32*u.*(c.rfTogether/10000*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d))); 
+
     
     
     %Defining the cost function for the two pumps: 
     %Pump 1
-    Jl1= @(u) ones(1,c.Nc)*(c.e1*c.Je.*(c.A_31*u.*(PipeResistance1(u)+PipeResistanceTogether(u)+height1(u)))); 
+    Jp1= @(u) (c.e1*c.Je'*(PipeResistance1(u)+PipeResistanceTogether1(u)+height1(u))); 
     %Pump 2 
-    Jl2= @(u) ones(1,c.Nc)*(c.e2*c.Je.*(c.A_32*u.*(PipeResistance2(u)+PipeResistanceTogether(u)+height2(u)))); 
+    Jp2= @(u) (c.e2*c.Je'*(PipeResistance2(u)+PipeResistanceTogether2(u)+height2(u))); 
     
     %Setting the solver alogrithm to be sqp: 
     options = optimoptions(@fmincon,'Algorithm','sqp');
@@ -154,7 +158,7 @@ Js= @(u) c.K*(c.ts*ones(1,c.Nc)*(c.A_1*u/3600-c.d/3600))^2;
 
 
 %Setting up the cost function: 
-costFunction=@(u) (Jl1(u)+Jl2(u)+Js(u));
+costFunction=@(u) (Jp1(u)+Jp2(u)+Js(u));
 
     
 %Inital guess 

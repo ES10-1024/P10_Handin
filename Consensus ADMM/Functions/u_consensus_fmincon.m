@@ -49,24 +49,36 @@ if (n_unit==1)
         %cost function is written up 
         if scaledCostFunction == false 
                 %Elevation 
-                height1=@(u) c.g0*c.rhoW*(h(u)+c.z1);
+                height1=@(u) c.A_31*u/3600.*(c.g0*c.rhoW*(h(u)+c.z1));
                 %Unqie resistance 
-                PipeResistance1= @(u) c.rf1*c.A_31*(u.*abs(u)); 
+                PipeResistance1= @(u) c.rf1*c.A_31*(u.*abs(u)*abs(u)); 
                 %Common resistance 
-                PipeResistanceTogether= @(u) c.rfTogether*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d));  
+                PipeResistanceTogether= @(u) c.A_31*u/3600.*(c.rfTogether*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d)));  
                 %Written up power term
-                J_l= @(u) c.ts*ones(1,c.Nc)*(c.e1*c.Je/(3600*1000).*(c.A_31*u/3600.*(PipeResistance1(u)+PipeResistanceTogether(u)+height1(u))));
+                Jp= @(u) c.ts*(1/c.eta1*c.Je'/(3600*1000)*(PipeResistance1(u)+PipeResistanceTogether(u)+height1(u)));
+                %Defining that the amount of water in the tower in the start and end
+                %has to be the same 
+                Js= @(u) c.K/3*(c.ts*ones(1,c.Nc)*(c.A_1*u/3600-c.d/3600))^2;
+                %Collecting into one cost function
+                costFunction=@(u) Js(u)+Jp(u); 
+
 
  
         else 
                 %Elevation 
-                height1=@(u) c.g0*c.rhoW/c.condScaling*(h(u)+c.z1);
+                height1=@(u) c.A_31*u.*(c.g0*c.rhoW/c.condScaling*(h(u)+c.z1));
                 %Unqie resistance 
-                PipeResistance1= @(u) c.rf1/c.condScaling*c.A_31*(u.*abs(u)); 
+                PipeResistance1= @(u) c.rf1/c.condScaling*c.A_31*(u.*abs(u).*abs(u)); 
                 %Common resistance 
-                PipeResistanceTogether= @(u) c.rfTogether/c.condScaling*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d));  
+                PipeResistanceTogether= @(u) c.A_31*u.*(c.rfTogether/c.condScaling*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d)));  
                %Written up power term
-                J_l= @(u) ones(1,c.Nc)*(c.e1*c.Je.*(c.A_31*u.*(PipeResistance1(u)+PipeResistanceTogether(u)+height1(u))));
+                Jp= @(u) (1/c.eta1*c.Je'*(PipeResistance1(u)+PipeResistanceTogether(u)+height1(u)));
+
+                %Defining that the amount of water in the tower in the start and end
+                %has to be the same 
+                Js= @(u) c.K/3*(c.ts*ones(1,c.Nc)*(c.A_1*u/3600-c.d/3600))^2;
+                %Collecting into one cost function
+                costFunction=@(u) Js(u)+Jp(u); 
 
 
 
@@ -94,24 +106,34 @@ if (n_unit==2)
         %cost function is written up 
         if scaledCostFunction == false 
                 %elevation 
-                height2=@(u) c.g0*c.rhoW*(h(u)+c.z2);
+                height2=@(u) c.A_32*u/3600.*(c.g0*c.rhoW*(h(u)+c.z2));
                 %Uniq pipe resistance 
-                PipeResistance2= @(u) c.rf2*c.A_32*(u.*abs(u)); 
+                PipeResistance2= @(u) c.rf2*c.A_32*(u.*abs(u).*abs(u)); 
                 %common pipe resistance 
-                PipeResistanceTogether= @(u) c.rfTogether*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d)); 
+                PipeResistanceTogether= @(u) c.A_32*u/3600.*(c.rfTogether*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d))); 
                 %Writting up the power term 
-                J_l= @(u) c.ts*ones(1,c.Nc)*(c.e2*c.Je/(3600*1000).*(c.A_32*u/3600.*(PipeResistance2(u)+PipeResistanceTogether(u)+height2(u))));
+                Jp= @(u) c.ts*(1/c.eta2*c.Je'/(3600*1000)*(PipeResistance2(u)+PipeResistanceTogether(u)+height2(u)));
+                %Defining that the amount of water in the tower in the start and end
+                %has to be the same 
+                Js= @(u) c.K/3*(c.ts*ones(1,c.Nc)*(c.A_1*u/3600-c.d/3600))^2;
+                %Collecting into one cost function
+                costFunction=@(u) Js(u)+Jp(u); 
 
         
         else 
                 %elevation 
-                height2=@(u) c.g0*c.rhoW/10000*(h(u)+c.z2);
+                height2=@(u) c.A_32*u.*(c.g0*c.rhoW/c.condScaling*(h(u)+c.z2));
                 %Uniq pipe resistance
-                PipeResistance2= @(u) c.rf2/10000*c.A_32*(u.*abs(u));
+                PipeResistance2= @(u) c.rf2/c.condScaling*c.A_32*(u.*abs(u).*abs(u));
                 %common pipe resistance 
-                PipeResistanceTogether= @(u)c.rfTogether/10000*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d)); 
+                PipeResistanceTogether= @(u) c.A_32*u.*(c.rfTogether/c.condScaling*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d))); 
                 %Writting up the power term 
-                J_l= @(u) ones(1,c.Nc)*(c.e2*c.Je.*(c.A_32*u.*(PipeResistance2(u)+PipeResistanceTogether(u)+height2(u))));
+                Jp= @(u) (1/c.eta2*c.Je'*((PipeResistance2(u)+PipeResistanceTogether(u)+height2(u))));
+                %Defining that the amount of water in the tower in the start and end
+                %has to be the same 
+                Js= @(u) c.K/3*(c.ts*ones(1,c.Nc)*(c.A_1*u/3600-c.d/3600))^2;
+                %Collecting into one cost function
+                costFunction=@(u) Js(u)+Jp(u); 
         end 
 
 end 
@@ -135,8 +157,12 @@ if n_unit==3
     AA=[A.pumpL;A.towerL;A.towerU];
     BB=[B.pumpL;B.towerL;B.towerU];
     
+    Js= @(u) c.K/3*(c.ts*ones(1,c.Nc)*(c.A_1*u/3600-c.d/3600))^2;
+    
     %Defining the cost function: 
-    J_l= @(u) 0; 
+    costFunction= @(u) Js(u); 
+    %costFunction= @(u) 0; 
+
 end 
 
     %% Cost function definition
@@ -147,17 +173,15 @@ end
 
 
 
-    %Defining that the amount of water in the tower in the start and end
-    %has to be the same 
-    Js= @(u) c.K*(c.ts*ones(1,c.Nc)*(c.A_1*u/3600-c.d/3600))^2;
+  
     
     %Making the entire cost function
-    costFunction=@(u) (J_l(u)+Js(u)+J_con_z(u));
+    costFunctionAll=@(u) (costFunction(u)+J_con_z(u));
     %Initial guess
     x0 = x;
     
     %Solving the problem  
-    u_hat = fmincon(costFunction,x0,AA,BB,Aeq,beq,lb,ub,nonlcon,options);
+    u_hat = fmincon(costFunctionAll,x0,AA,BB,Aeq,beq,lb,ub,nonlcon,options);
 
 end
 
