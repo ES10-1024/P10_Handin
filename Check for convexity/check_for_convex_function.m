@@ -5,18 +5,15 @@ clear
 clc 
 close all 
 
-%Adding path. 
-addpath("..\")
-addpath("..\Global controller\Simple Simulink implemtation\Functions\")
-
-
+%Adding a few functions to the path. 
+addpath("Consensus\")
+addpath("Consensus\Functions\")
 
 %Loading in the scaled electricty price 
 c=scaled_standard_constants; 
 %Selected the hour which is desired to look at: 
 hour=165;  
 currentTime=hour*c.ts;
-
 %Only working with the current and one future time step: 
 c.Nc=2;
 
@@ -27,6 +24,7 @@ c.Je=c.Je(1:c.Nc);
 
 [c.d,consumptionNoise] = consumption(currentTime);
 c.d=c.d(1,1); 
+
 
 
 %% Making A and v matrices for the optimization problem 
@@ -142,13 +140,13 @@ for indexU4=u44
     end 
     indexU4
 end 
-%%
-res=double(res); 
-
+%% Plotting the lowest eigenvalue to see if it is below zero. 
 hold on 
 plot(res)
 yline(0)
 hold off 
+xlabel('Iterations number') 
+ylabel('Lowest eigenvalue')
 
+save("check_for_convex_function_saved.mat")
 
-save("check_for_convexity_1.mat")
