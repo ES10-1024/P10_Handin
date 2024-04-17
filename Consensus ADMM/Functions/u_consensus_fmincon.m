@@ -60,11 +60,11 @@ if (n_unit==1)
  
         else 
                 %Elevation 
-                height1=@(u) c.g0*c.rhoW/10000*(h(u)+c.z1);
+                height1=@(u) c.g0*c.rhoW/c.condScaling*(h(u)+c.z1);
                 %Unqie resistance 
-                PipeResistance1= @(u) c.rf1/10000*c.A_31*(u.*abs(u)); 
+                PipeResistance1= @(u) c.rf1/c.condScaling*c.A_31*(u.*abs(u)); 
                 %Common resistance 
-                PipeResistanceTogether= @(u) c.rfTogether/10000*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d));  
+                PipeResistanceTogether= @(u) c.rfTogether/c.condScaling*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d));  
                %Written up power term
                 J_l= @(u) ones(1,c.Nc)*(c.e1*c.Je.*(c.A_31*u.*(PipeResistance1(u)+PipeResistanceTogether(u)+height1(u))));
 

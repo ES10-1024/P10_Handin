@@ -42,9 +42,11 @@ constants.rhoW=997;
 constants.g0=9.82; 
 
 %Defining effeciny of the 3 pumps 
-constants.e1=1.1; %To Be Updated!
-constants.e2=1.3; %To Be Updated!
+constants.e1=1.1; 
+constants.e2=1.3; 
 
+constants.eta1=0.909;
+constants.eta2=0.769;
 
 % Defining pipe resistance  (stupied units so not included here
 constants.rf1=0.35*10^5;%0.3*10^5; 
