@@ -108,7 +108,8 @@ constants.varying_rho_iterations_numbers=10;
 constants.mu=10;  %10
 constants.tauIncr=2;%1.5; %2; 
 constants.tauDecr=2;%1.5; %2;
-
+%% Scaling for conditioning 
+constants.condScaling=10000;
 %% SMPC varaibles 
   %% Constraints   
 %Defining the primenumber for the finith field 
