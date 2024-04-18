@@ -1,21 +1,13 @@
 function constants = scaled_standard_constants()
   %% Constraints   
-%Define the minimum and maximum amount each pump are allowed to pump during a day
-constants.TdMin1=0;
-constants.TdMin2=0;
-constants.TdMin3=0;
+%Define the maximum amount each pump are allowed to pump during a day
+
 
 constants.TdMax1=10;%3.6; 
 constants.TdMax2=10;%3.6;
-%constants.TdMax3=400; 
-
-%Defining pressure before the pumps [Pa]: 
-constants.p10=0;%101325; 
-constants.p20=0;%101325; 
-constants.p30=0;%101325;
 
 % Define max mass flow for each pump (m^3/h) 
-constants.umax1=0.3;    %0.05; 
+constants.umax1=0.3;   
 constants.umax2=0.3;
 
 
@@ -42,15 +34,15 @@ constants.rhoW=997;
 constants.g0=9.82; 
 
 %Defining effeciny of the 3 pumps 
-constants.e1=1.1; 
-constants.e2=1.3; 
+% constants.e1=1.1; 
+% constants.e2=1.3; 
 
 constants.eta1=0.909;
 constants.eta2=0.769;
 
 % Defining pipe resistance  (stupied units so not included here
-constants.rf1=0.35*10^5;%0.3*10^5; 
-constants.rf2=0.42*10^5;%0.1*10^5; 
+constants.rf1=0.35*10^5;
+constants.rf2=0.42*10^5;
 
 %Defining ressistance after 
 constants.rfTogether = 0.29*10^5; 
@@ -70,9 +62,7 @@ constants.h=0.2;
 %Inital volumen [m^c]
 %constants.V=constants.h*constants.At; 
 constants.V=56/1000;
-%% noise for consumpition model
-constants.NoiseMean=0; 
-constants.NoiseVariance=4; 
+
 
 %% MPC tuning parameter
 
@@ -80,16 +70,11 @@ constants.NoiseVariance=4;
 %Defining wired K in the cost function
 constants.K=900;% 450; %450; %800
 
-%Weight for the price term
-constants.Kp=1; 
-
 %Setting sampletime in seconds
 constants.ts=600;%1; 
 
-
-
 % Defining control horizion in samples 
-constants.Nc =24; %24; 
+constants.Nc =24;  
 
 %Defining accelerated time (amount of accelered hour in one real world hour 
 constants.AccTime=6; 
@@ -97,31 +82,29 @@ constants.AccTime=6;
 %Defining amount of iteration that the consensus ADMM should do 
 constants.iteration=150;
 
-constants.rho=1; %3 works well as a fixed value
+constants.rho=1; 
 %% If the cost function should be scaled: 
 constants.scaled=true; 
 %% If disturbance with regard to demand should be utilized: 
 constants.disturbance=true;
 %% If the electricity price should be scaled 
 constants.scaledEletricityPrice=true;
+
 %% Define if it is allowed to vary rho if it is the case how many iterations 
 constants.varying_rho=true; 
 constants.varying_rho_iterations_numbers=10; 
-constants.mu=10;  %10
-constants.tauIncr=2;%1.5; %2; 
-constants.tauDecr=2;%1.5; %2;
+constants.mu=10;  
+constants.tauIncr=2;
+constants.tauDecr=2;
 %% Scaling for conditioning 
 constants.condScaling=10000;
 %% SMPC varaibles 
   %% Constraints   
 %Defining the primenumber for the finith field 
-%constants.prime=15000017; 
-constants.prime=10000019;   %150001; 
+constants.prime=10000019;  
 
 % Defining scaling factor 
-%constants.scaling=100000; 
 constants.scaling=10000;
 
-%constants.sMPCOffset=45;
 constants.sMPCOffset=1;
 end
