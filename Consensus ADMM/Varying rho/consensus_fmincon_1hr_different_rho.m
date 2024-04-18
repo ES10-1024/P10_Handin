@@ -205,7 +205,6 @@ end
 toc 
 
 %% Plotting difference between the global cost value and the consensus cost value 
-FrontSize=24;
 for i=1:size(costDifference,2)
     for k=1:size(costDifference,1)
     procentDifference(k,i)=costDifference(k,i).*inv(costGlobal).*100;
@@ -223,8 +222,8 @@ ax.YGrid = 'on'
 %ytickformat(ax, '%g%%');
 ax.XGrid = 'on'
 
-xlabel('Iterations','FontSize',FrontSize)
-ylabel('$P_\mathrm{ADMM}$','Interpreter','latex','FontSize',FrontSize)
+xlabel('Iterations')
+ylabel('Performance')
 fontname(f,'Times')
 legend('\rho=1','\rho=2','\rho=3','\rho=4','\rho=5')
 
@@ -248,8 +247,9 @@ ylim([-2 5])
 fontname(f,'Times')
 
 set(gca,'fontname','times')
+a = annotation('rectangle',[0 0 1 1],'Color','w');
+exportgraphics(f,'Plots/rho=1_to_5_hour_1_kappa=900_no_underrelexation.pdf')
 
-exportgraphics(f,'Plots/rho=1_to_5_hour_1_kappa=900.pdf')
-
+delete(a)
 
 
