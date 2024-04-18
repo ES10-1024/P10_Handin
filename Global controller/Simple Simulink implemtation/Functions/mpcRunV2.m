@@ -61,20 +61,24 @@ for i=1:c.Nc
     c.A_32 = blkdiag(c.A_32,[0 1]);
 end
 
-%% Setting up the constraints
+%% Setting up the constraints on the form Ax<=b
 %All pumps mass flows should be above zero: 
 A.pumpL = -eye(total);
 B.pumpL = zeros(total,1);
 
-% Pump one upper limith
+% Extraction limith pump one 
 A.extract1 = c.v1'*c.ts/3600;  
 B.extract1 = c.TdMax1;
+
+% Pump one upper limith
 A.pumpU1 = c.A_31; 
 B.pumpU1 = ones(c.Nc,1)*c.umax1; 
 
-% Pump two upper limith 
+%Extraction limith pump two 
 A.extract2 = c.v2'*c.ts/3600;  
 B.extract2 = c.TdMax2;
+
+% Pump two upper limith 
 A.pumpU2 = c.A_32; 
 B.pumpU2 = ones(c.Nc,1)*c.umax2; 
 

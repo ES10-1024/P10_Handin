@@ -89,7 +89,8 @@ constants.scaled=true;
 constants.disturbance=true;
 %% If the electricity price should be scaled 
 constants.scaledEletricityPrice=true;
-
+%% If SMPC should be used for consensus ADMM 
+constants.UseSMPC=false; 
 %% Define if it is allowed to vary rho if it is the case how many iterations 
 constants.varying_rho=true; 
 constants.varying_rho_iterations_numbers=10; 

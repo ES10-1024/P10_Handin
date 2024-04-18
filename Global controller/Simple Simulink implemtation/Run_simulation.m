@@ -35,7 +35,8 @@ for index=2:size(simData.logsout{14}.Values.Data,1)
     ElPrices(index-1)=temp(1,1);
 end 
 
-consumptionActual=simData.logsout{5}.Values.Data(2:end,1); 
+
+consumptionNoise=simData.logsout{5}.Values.Data(2:end,1); 
 
 consumptionPred=squeeze(simData.logsout{4}.Values.Data(1,1,2:end)); 
 
