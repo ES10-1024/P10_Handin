@@ -16,7 +16,7 @@ c=scaled_standard_constants;
 
 %% getting the  one hour of eletricity price and demand data
 %Select the hour which is desired to work with 
-hour=670; %645;%552;%333; 
+hour=1;  
 
 %Determining the time in physical seconds 
 currentTime=hour*c.ts;
@@ -88,7 +88,7 @@ costGlobal=costFunction(uAll,c,scaledCostFunction);
 %% Consensus problem
 
 %Defining the penalty parameter rho, which is desired to look at 
-rho_v=[1 2 3 4 5]; %[2 4 6 8 10];  %[1 2 3 4 5]; %3;%1:5; %[0.6, 0.8, 1, 2, 4]; %10; %0.1^(3.1);%100000;%11000; %10000;%1800;%30:5:50 %90;%:10:1400;%150; %200:10:300;% 0.1.^(2.5:0.2:3); %(2.5:0.2:4.5)
+rho_v=[1 2 3 4 5];
  
 %if a varying rho should be utilized: 
 varying_rho=false; 
@@ -101,7 +101,7 @@ tauDecr=2;
 useWaterTower=true;
 
 % Defining if underrelaxation should be utilized 
-underrelaxation=true; 
+underrelaxation=false; 
 
 %setting the number of agents based on if the water tower is utilized: 
 if useWaterTower == true 
@@ -205,7 +205,7 @@ end
 toc 
 
 %% Plotting difference between the global cost value and the consensus cost value 
-FrontSize=16;
+FrontSize=24;
 for i=1:size(costDifference,2)
     for k=1:size(costDifference,1)
     procentDifference(k,i)=costDifference(k,i).*inv(costGlobal).*100;
@@ -213,32 +213,43 @@ for i=1:size(costDifference,2)
 end 
 
 f=figure
+ax=axes; 
+hold on 
 plot(procentDifference)
+yline(0)
+hold off 
+ytickformat(ax, 'percentage');
+ax.YGrid = 'on'
+%ytickformat(ax, '%g%%');
+ax.XGrid = 'on'
 
-
-%legend('\rho=2','\rho=4','\rho=6','\rho=8','\rho=10')
+xlabel('Iterations','FontSize',FrontSize)
+ylabel('$P_\mathrm{ADMM}$','Interpreter','latex','FontSize',FrontSize)
+fontname(f,'Times')
 legend('\rho=1','\rho=2','\rho=3','\rho=4','\rho=5')
-xlabel("Iterations",'FontSize',FrontSize)
-ylabel("Procentwise difference in cost functions",'FontSize',FrontSize)
-grid 
+
 set(gca,'fontname','times')
-yline(0,'HandleVisibility','off');
-ylim([-40 50])
+ylim([-2 5])
 
 % Making a zoomed in version of the differencing between the global cost value and the consensus cost value
 
-axes('Position', [.55 .17 .25 .25])
-box on 
-plot(procentDifference)
-%xlim([size(z,2)-11 size(z,2)-1])
-xlim([100 300])
-ylim([-1 1])
+% axes('Position', [.35 .5 .4 .4])
+% ax=axes; 
+% ytickformat(ax, 'percentage');
+% ax.YGrid = 'on'
+% 
+% box on 
+% plot(procentDifference)
+% 
+% xlim([250 300])
+% ylim([-1 1])
 
-yline(0)
-grid 
+% yline(0)
+fontname(f,'Times')
+
 set(gca,'fontname','times')
 
-exportgraphics(f,'Plots/rho=1_to_5_hour_670_kappa=900.pdf')
+exportgraphics(f,'Plots/rho=1_to_5_hour_1_kappa=900.pdf')
 
 
 

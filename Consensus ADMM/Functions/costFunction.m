@@ -29,9 +29,9 @@ if scaledCost == false
     
     %Defining the cost function for the two pumps: 
     %Pump 1
-    Jl1= @(u) c.ts*ones(1,c.Nc)*(c.e1*c.Je/(3600*1000).*(c.A_31*u/3600.*(PipeResistance1(u)+PipeResistanceTogether(u)+height1(u)))); 
+    Jl1= @(u) c.ts*ones(1,c.Nc)*(1/c.eta1*c.Je/(3600*1000).*(c.A_31*u/3600.*(PipeResistance1(u)+PipeResistanceTogether(u)+height1(u)))); 
     %Pump 2 
-    Jl2= @(u) c.ts*ones(1,c.Nc)*(c.e2*c.Je/(3600*1000).*(c.A_32*u/3600.*(PipeResistance2(u)+PipeResistanceTogether(u)+height2(u)))); 
+    Jl2= @(u) c.ts*ones(1,c.Nc)*(1/c.eta2*c.Je/(3600*1000).*(c.A_32*u/3600.*(PipeResistance2(u)+PipeResistanceTogether(u)+height2(u)))); 
 
 
 else 
@@ -53,9 +53,9 @@ else
     
     %Defining the cost function for the two pumps: 
     %Pump 1
-    Jl1= @(u) ones(1,c.Nc)*(c.e1*c.Je.*(c.A_31*u.*(PipeResistance1(u)+PipeResistanceTogether(u)+height1(u)))); 
+    Jl1= @(u) ones(1,c.Nc)*(1/c.eta1*c.Je.*(c.A_31*u.*(PipeResistance1(u)+PipeResistanceTogether(u)+height1(u)))); 
     %Pump 2 
-    Jl2= @(u) ones(1,c.Nc)*(c.e2*c.Je.*(c.A_32*u.*(PipeResistance2(u)+PipeResistanceTogether(u)+height2(u)))); 
+    Jl2= @(u) ones(1,c.Nc)*(1/c.eta2*c.Je.*(c.A_32*u.*(PipeResistance2(u)+PipeResistanceTogether(u)+height2(u)))); 
 
 end 
 

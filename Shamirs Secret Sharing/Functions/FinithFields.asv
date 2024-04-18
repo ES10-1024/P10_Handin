@@ -1,0 +1,25 @@
+function [Finith] = FinithFields(NotFinith)
+%FINITH FIELDS Making a number fit in the finith field 
+
+
+Finith=zeros(size(NotFinith,1),size(NotFinith,2)); 
+
+%Loading in scaled standard constants 
+c=scaled_standard_constants;
+ 
+for index=1:size(NotFinith,1)
+    while  c.prime-1<NotFinith(index,1)
+                NotFinith(index,1)=NotFinith(index,1)-c.prime; 
+               
+    end 
+    
+    while NotFinith(index,1)<0
+            NotFinith(index,1)=NotFinith(index,1)+c.prime;
+           
+    end 
+end 
+
+Finith=NotFinith; 
+
+end
+
