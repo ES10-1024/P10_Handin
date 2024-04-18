@@ -143,9 +143,9 @@ else
     
     %Defining the cost function for the two pumps: 
     %Pump 1
-    Jp1= @(u) (c.e1*c.Je'*(PipeResistance1(u)+PipeResistanceTogether1(u)+height1(u))); 
+    Jp1= @(u) (1/c.eta1*c.Je'*(PipeResistance1(u)+PipeResistanceTogether1(u)+height1(u))); 
     %Pump 2 
-    Jp2= @(u) (c.e2*c.Je'*(PipeResistance2(u)+PipeResistanceTogether2(u)+height2(u))); 
+    Jp2= @(u) (1/c.eta2*c.Je'*(PipeResistance2(u)+PipeResistanceTogether2(u)+height2(u))); 
     
     %Setting the solver alogrithm to be sqp: 
     options = optimoptions(@fmincon,'Algorithm','sqp');
