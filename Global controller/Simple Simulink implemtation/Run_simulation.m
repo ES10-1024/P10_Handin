@@ -5,21 +5,11 @@ clf
 clc 
 clear
 close all
-%adding a few path: 
-addpath("..\..\")
-addpath("..\..\Global controller\")
-
-addpath("..\..\log\")
-addpath("log\")
-
-addpath("Functions\")
-addpath("..\Subsystem Reference\")
-
-
 %% Adding path and standard values
+addpath("Global controller\Simple Simulink implemtation\Functions\")
 c=scaled_standard_constants; 
 %% Define the amount of scaled hours it is desired to simulate for: 
-simHour=72; 
+simHour=500; 
 
 %Making calculatation to get it to fit with the sacled time and make it
 %such matlab likes it 
@@ -40,9 +30,12 @@ end
 
 % Getting the electricity prices, actual consumption, prediction horizion
 % and the volume in the water tower 
-ElPrices=squeeze(simData.logsout{6}.Values.Data(1,1,2:end));
+for index=2:size(simData.logsout{14}.Values.Data,1)
+    [temp]=ElectrictyPrices(index*c.ts); 
+    ElPrices(index-1)=temp(1,1);
+end 
 
-consumptionNoise=simData.logsout{5}.Values.Data(2:end,1); 
+consumptionActual=simData.logsout{5}.Values.Data(2:end,1); 
 
 consumptionPred=squeeze(simData.logsout{4}.Values.Data(1,1,2:end)); 
 
@@ -54,14 +47,14 @@ f=figure
 subplot(3,1,1)
 hold on
 yyaxis left
-ylabel('Summed pump flow [m^{3}/h]' )
+ylabel('Mass flow [m^{3}/h]' )
 stairs(summedMassflow) 
 yyaxis right 
-ylabel('Electri prices [Euro/kWh]') 
+ylabel('El Prices [Euro/kWh]') 
 stairs(ElPrices)
-xlabel('Time [h_{a}]') 
+xlabel('Hours scaled') 
 grid 
-xlim([0 72])
+xlim([0 500])
 hold off 
 set(gca,'fontname','times')
 
@@ -74,9 +67,9 @@ yline(c.Vmin)
 hold off 
 legend('Volume','Constraints')
 ylabel('Volume [m^{3}]') 
-xlim([0 72])
+xlim([0 500])
 grid 
-xlabel('Time [h_{a}]') 
+xlabel('Hours scaled') 
 set(gca,'fontname','times')
 
 %Predicted consumption and presented consumption
@@ -86,14 +79,14 @@ stairs(consumptionPred)
 stairs(consumptionNoise)
 hold off 
 grid 
-legend('Predicted flow','Actual flow')
-xlim([0 72])
+legend('Predicted consumption','Actual consumption')
+xlim([0 500])
 ylabel('Mass flow [m^{3}/h]' )
-xlabel('Time [h_{a}]') 
+xlabel('Hours scaled') 
 set(gca,'fontname','times')
 
-a = annotation('rectangle',[0 0 1 1],'Color','w');
 
-exportgraphics(f,'global_controller_scaled_with_disturbance_with_Kappa.pdf')
 
-delete(a)
+
+%exportgraphics(f,'global_controller_scaled_with_disturbance_with_Kappa.pdf')
+
