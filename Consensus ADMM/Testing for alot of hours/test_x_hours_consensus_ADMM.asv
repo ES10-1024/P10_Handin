@@ -190,8 +190,6 @@ for k=1:IterationsNumber
         z(:,k+1) =  z_tilde; 
         lambda= lambda_tilde;
     end 
-    lambdaSave(:,:,k,time)=lambda; 
-    zSave(:,:,k,time)=z(:,k+1);
     
     % Picking out the values from the solution which will be used, at each 
     % pump station. These values are used to determine cost and comparing:
@@ -357,32 +355,9 @@ for time=1:size(Xsave,4)
                 %The number is not odd use second entire
                 DiffFromConsensus(entire,k,time)=abs(Xsave(entire,2,k,time)-Xsave(entire,1,k,time))+abs(Xsave(entire,2,k,time)-Xsave(entire,1,k,time));
             end
-           meanDiffFromConsensus(k,time)=sum(DiffFromConsensus(:,k,time))/48; 
+
         end 
     end 
-    time
 end 
-
-%% Making a plot on te average disargment from consensus 
-f=figure
-plot(meanDiffFromConsensus) 
-xlabel('Iterations')
-ylabel('Mean abs diff from consensus')
-grid 
-ylim([0 0.2])
-set(gca,'fontname','times')
-axes('Position', [.3 .3 .55 .55])
-box on 
-hold on 
-plot(meanDiffFromConsensus)
-hold off 
-xlim([100 300])
-grid 
-exportgraphics(f,'Plots/Mean_abs_diff_from_consensus.pdf')
-
-%exportgraphics(gcf,'Plots/Mean_abs_diff_from_consensus.pdf', 'ContentType', 'vector')
-
-
-
 
 
