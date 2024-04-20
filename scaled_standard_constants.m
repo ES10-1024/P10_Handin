@@ -68,7 +68,7 @@ constants.V=56/1000;
 
 
 %Defining wired K in the cost function
-constants.K=900;% 450; %450; %800
+constants.K=900 450; %450; %800
 
 %Setting sampletime in seconds
 constants.ts=600;%1; 

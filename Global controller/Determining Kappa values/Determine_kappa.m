@@ -14,7 +14,7 @@ scaledCostfunction=true;
 scaledEletricityPrice=true;
 
 %Hours it is desired to simulate: 
-simHour=500; 
+simHour=100; 
 
 
 %% Loading in standard Constants and adding a few paths 

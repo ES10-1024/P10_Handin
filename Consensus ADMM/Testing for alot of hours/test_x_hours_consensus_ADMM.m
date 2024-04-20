@@ -293,7 +293,7 @@ ax.YGrid = 'on'
 ax.XGrid = 'on'
 
 
-xlabel("Iterations")
+xlabel("Hour [h_a]")
 ylabel("Performance")
 fontname(f,'Times')
 set(gca,'fontname','times')
@@ -315,7 +315,7 @@ grid
 
 
 
-%exportgraphics(f,'Plots/percentage_diff_1000_hr_varying_rho_first_10_el_scaled_K=900.pdf')
+exportgraphics(f,'Plots/percentage_diff_1000_hr_varying_rho_first_10_el_scaled_K=900.pdf')
 %% Making a zoomed in version of the procentwise differencing between the global cost value and the consensus cost value
 f=figure
 hold on 
@@ -334,31 +334,39 @@ xlim([280 300])
 
 %% Plotting the rho value at the 10 iterations: 
 f=figure
+ax=axes; 
 stairs(saveRho(end,:))
-xlabel('Iterations')
+xlabel('Hour [h_a]')
 ylabel('$\rho$ value', 'Interpreter', 'latex')
+box off 
 grid on 
 ylim([0 10])
 
 set(gca,'fontname','times')
-fontname(f,'Times')
 
-%exportgraphics(f,'Plots/rho_value_10_iterations.pdf')
+exportgraphics(gcf,'Plots/rho_value_10_iterations.pdf','ContentType','image')
 
 %% Determining the average disargement from consensus 
-
+clear meanDiffFromConsensus 
+clear DiffFromConsensus
 for time=1:size(Xsave,4)
     for k=1:size(Xsave,3) 
         for entire=1:size(Xsave,1)
+            %DiffFromConsensus(k,time)=abs(Xsave(entire,1,k,time)-Xsave(entire,2,k,time))+abs(Xsave(entire,1,k,time)-Xsave(entire,3,k,time))+abs(Xsave(entire,2,k,time)-Xsave(entire,3,k,time));
+            %DiffFromConsensus(k,time)=max(max(abs(Xsave(entire,1,k,time)-Xsave(entire,2,k,time)),abs(Xsave(entire,1,k,time)-Xsave(entire,3,k,time))),abs(Xsave(entire,2,k,time)-Xsave(entire,3,k,time)));
             if mod(entire, 2) == 1
                 %The number is odd use first entire 
-                DiffFromConsensus(entire,k,time)=abs(Xsave(entire,1,k,time)-Xsave(entire,2,k,time))+abs(Xsave(entire,1,k,time)-Xsave(entire,3,k,time));
+                %DiffFromConsensus(entire,k,time)=abs(Xsave(entire,1,k,time)-Xsave(entire,2,k,time))+abs(Xsave(entire,1,k,time)-Xsave(entire,3,k,time));
+                DiffFromConsensus(entire,k,time)=(Xsave(entire,1,k,time)-Xsave(entire,3,k,time));
             else
                 %The number is not odd use second entire
-                DiffFromConsensus(entire,k,time)=abs(Xsave(entire,2,k,time)-Xsave(entire,1,k,time))+abs(Xsave(entire,2,k,time)-Xsave(entire,1,k,time));
+                %DiffFromConsensus(entire,k,time)=abs(Xsave(entire,2,k,time)-Xsave(entire,1,k,time))+abs(Xsave(entire,2,k,time)-Xsave(entire,3,k,time));
+                DiffFromConsensus(entire,k,time)=(Xsave(entire,2,k,time)-Xsave(entire,1,k,time));
             end
-           meanDiffFromConsensus(k,time)=sum(DiffFromConsensus(:,k,time))/48; 
         end 
+        %meanDiffFromConsensus(k,time)=sum(DiffFromConsensus(k,time))/((c.Nu+1)*c.Nc*3); 
+        meanDiffFromConsensus(k,time)=sum(DiffFromConsensus(:,k,time))*600/3600*1000;
+
     end 
     time
 end 
@@ -367,9 +375,9 @@ end
 f=figure
 plot(meanDiffFromConsensus) 
 xlabel('Iterations')
-ylabel('Mean abs diff from consensus')
+ylabel('$\Delta \mathbf{x}''$ [m$^3$/h]', 'Interpreter', 'latex');
 grid 
-ylim([0 0.2])
+box off 
 set(gca,'fontname','times')
 axes('Position', [.3 .3 .55 .55])
 box on 
@@ -378,7 +386,7 @@ plot(meanDiffFromConsensus)
 hold off 
 xlim([100 300])
 grid 
-exportgraphics(f,'Plots/Mean_abs_diff_from_consensus.pdf')
+%exportgraphics(f,'Plots/Mean_abs_diff_from_consensus.pdf')
 
 %exportgraphics(gcf,'Plots/Mean_abs_diff_from_consensus.pdf', 'ContentType', 'vector')
 
