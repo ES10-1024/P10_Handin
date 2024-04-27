@@ -161,7 +161,7 @@ end
 %Defining that the amount of water in the tower in the start and end
 %has to be the same 
 Js= @(u) c.K*(c.ts*ones(1,c.Nc)*(c.A_1*u/3600-c.d/3600))^2;
-
+%Js= @(u) c.K*(abs(ones(1,c.Nc)*(c.A_1*u-c.d))); kappa=1 
 
 %Setting up the cost function: 
 costFunction=@(u) (Jp1(u)+Jp2(u)+Js(u));
