@@ -97,6 +97,8 @@ BB=[B.pumpL;B.extract1;B.pumpU1;B.extract2;B.pumpU2;B.towerL;B.towerU];
 
 % Water level in water tower (need for the cost functions)
  h=@(u) 1/c.At*(c.A_2*(c.A_1*c.ts*u/3600-c.ts*c.d/3600)+c.V);
+ %h=@(u) 0; 
+  
 
 %Different cost function if it is the scaled version or not  
 if scaled == false 

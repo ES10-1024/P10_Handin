@@ -7,9 +7,11 @@ clear
 close all
 %% Adding path and standard values
 addpath("Global controller\Simple Simulink implemtation\Functions\")
+addpath("..\Subsystem Reference\")
+addpath("..\..\")
 c=scaled_standard_constants; 
 %% Define the amount of scaled hours it is desired to simulate for: 
-simHour=500; 
+simHour=1; 
 
 %Making calculatation to get it to fit with the sacled time and make it
 %such matlab likes it 
@@ -30,7 +32,7 @@ end
 
 % Getting the electricity prices, actual consumption, prediction horizion
 % and the volume in the water tower 
-for index=2:size(simData.logsout{14}.Values.Data,1)
+for index=2:size(simData.logsout{5}.Values.Data,1)
     [temp]=ElectrictyPrices(index*c.ts); 
     ElPrices(index-1)=temp(1,1);
 end 

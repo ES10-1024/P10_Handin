@@ -48,12 +48,12 @@ clear i
 
 %% Initialization
 %Amount of hour that should be simulated: 
-hoursToSim=24; 
+hoursToSim=1; 
 %Number of iterations that the consensus ADMM should go though: 
 IterationsNumber=300; 
 
 %Defining the value of the penalty parameter 
-c.rho=8;% 
+c.rho=1;% 
 
 %if a varying rho should be utilized: 
 varying_rho=false; 
@@ -175,19 +175,23 @@ for k=1:IterationsNumber
 
     %Updating z/updating consensus parameter 
     z_tilde(:,k) = sum(x,2)/(c.Nu+1) + 1/(c.rho*(c.Nu+1))*sum(lambda,2);
-
+    if underrelaxation==true 
+        z(:,k+1) = z(:,k) - 1/(c.Nu+1+1)*(z(:,k)-z_tilde(:,k));
+    else
+        z(:,k+1) =  z_tilde; 
+    end 
+    zTildeSave(:,:,k,time)=z(:,k+1); 
     %Updating lambda
     for i=1:c.Nu+1
-        lambda_tilde(:,i) = lambda(:,i) + c.rho*(x(:,i)-z(:,k));
+        lambda_tilde(:,i) = lambda(:,i) + c.rho*(x(:,i)-z(:,k+1));
     end
+    lambdaTildeSave(:,:,k,time)=lambda_tilde;
 
     %Making underrelaxation if it is desired (only walking a little bit and not all the
     %way!) 
     if underrelaxation==true 
-        z(:,k+1) = z(:,k) - 1/(c.Nu+1+1)*(z(:,k)-z_tilde(:,k));
         lambda = lambda - 1/(c.Nu+1+1)*(lambda - lambda_tilde);
     else
-        z(:,k+1) =  z_tilde; 
         lambda= lambda_tilde;
     end 
     lambdaSave(:,:,k,time)=lambda; 
@@ -213,7 +217,7 @@ for k=1:IterationsNumber
     costDifference(k,time)=costConsensus(k,time)-costGlobal(:,time); 
     
     %Varying rho if desired: 
-    if varying_rho==true
+    if varying_rho==true && k< c.varying_rho_iterations_numbers
         r=0;
         s=0; 
         %Determine the mean value of x/mass flos 
@@ -243,12 +247,12 @@ for k=1:IterationsNumber
     %Printing how far we got! 
     k
     time 
+    Xsave(:,:,k,time)=x; 
 
 end 
 
 
 %Saving the entire X for latter analyzes. 
-Xsave(:,:,k,time)=x; 
 
 %Resseting part which varys rho; 
 clear xBar

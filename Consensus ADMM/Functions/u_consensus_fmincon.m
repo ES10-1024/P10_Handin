@@ -170,9 +170,6 @@ end
     %Defining the part of the cost function which is in regard to the ADMM consensus
     %algortime 
     J_con_z = @(u) lambda'*(u-z)+c.rho/2*((u-z)'*(u-z));
-
-
-
   
     
     %Making the entire cost function

@@ -6,8 +6,8 @@ clc
 close all 
 
 %Adding a few functions to the path. 
-addpath("Consensus\")
-addpath("Consensus\Functions\")
+addpath("..\")
+addpath("..\Global controller\Simple Simulink implemtation\Functions\")
 
 %Loading in the scaled electricty price 
 c=scaled_standard_constants; 
@@ -85,9 +85,9 @@ PipeResistanceTogether= c.rfTogether/10000*(abs(c.A_1*u-c.d).*(c.A_1*u-c.d));
 
 %Writting up the cost function for pump1 and pump2 
 %Pump 1
-Jl1=  ones(1,c.Nc)*(c.e1*c.Je.*(c.A_31*u.*(PipeResistance1+PipeResistanceTogether+height1))); 
+Jl1=  ones(1,c.Nc)*(1/c.eta1*c.Je.*(c.A_31*u.*(PipeResistance1+PipeResistanceTogether+height1))); 
 %Pump 2 
-Jl2=  ones(1,c.Nc)*(c.e2*c.Je.*(c.A_32*u.*(PipeResistance2+PipeResistanceTogether+height2))); 
+Jl2=  ones(1,c.Nc)*(1/c.eta2*c.Je.*(c.A_32*u.*(PipeResistance2+PipeResistanceTogether+height2))); 
 
 %Defining part of the cost function which states that the water volume
 %should be the same at the start and end of the control horzion: 

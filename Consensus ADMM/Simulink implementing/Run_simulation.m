@@ -7,8 +7,9 @@ clear
 close all
 %adding a few path: 
 addpath("..\..\")
-addpath("..\..\Global controller\")
-addpath("..\..\Shamirs Secret Sharing\")
+addpath("..\..\Global controller\Subsystem Reference\")
+addpath("..\..\Global controller\Simple Simulink implemtation\Functions\")
+addpath("..\..\Shamirs Secret Sharing\Functions\")
 
 
 addpath("..\..\log\")
@@ -17,10 +18,11 @@ addpath("Functions\")
 addpath("Subsystem Reference\")
 
 
+
 %% Adding path and standard values
 c=scaled_standard_constants; 
 %% Define the amount of scaled hours it is desired to simulate for: 
-simHour=4; 
+simHour=1; %48; 
 
 %Making calculatation to get it to fit with the sacled time and make it
 %such matlab likes it 
@@ -34,27 +36,27 @@ simData=sim('ADMM_consensus.slx',"StartTime",'0',"StopTime",c.Tsim,'FixedStep','
 %% Making a plot of the result  
 clf 
 % adding the mass flows for the given time stamp  
-for index=2:size(simData.logsout{14}.Values.Data,1) 
-summedMassflow(index-1,1)=simData.logsout{14}.Values.Data(index,1)+simData.logsout{15}.Values.Data(index,1);
+for index=2:size(simData.logsout{15}.Values.Data,1) 
+summedMassflow(index-1,1)=simData.logsout{15}.Values.Data(index,1)+simData.logsout{16}.Values.Data(index,1);
 end 
 
 % Getting the electricity prices,
 
-for index=2:size(simData.logsout{14}.Values.Data,1)
+for index=2:size(simData.logsout{7}.Values.Data,1)
     [temp]=ElectrictyPrices(index*c.ts); 
     ElPrices(index-1)=temp(1,1);
 end 
 
 %Getting  the actual consumption, prediction horizion
 % and the volume in the water tower 
-consumptionActual=simData.logsout{5}.Values.Data(2:end,1); 
+consumptionActual=simData.logsout{6}.Values.Data(2:end,1); 
 
-consumptionPred=squeeze(simData.logsout{4}.Values.Data(1,1,2:end)); 
+consumptionPred=squeeze(simData.logsout{5}.Values.Data(1,1,2:end)); 
 
-Volume=simData.logsout{18}.Values.Data; 
+Volume=simData.logsout{19}.Values.Data; 
 
 %Taking out the last rho value of each run 
-rhoValue=simData.logsout{16}.Values.Data;
+rhoValue=simData.logsout{17}.Values.Data;
 %% Making the plot 
 f=figure
 % Electricity prices and summed mass flow for each time stamp 

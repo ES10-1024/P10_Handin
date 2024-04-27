@@ -88,7 +88,7 @@ costGlobal=costFunction(uAll,c,scaledCostFunction);
 %% Consensus problem
 
 %Defining the penalty parameter rho, which is desired to look at 
-rho_v=[1 2 3 4 5];
+rho_v=[2 3 4 5 6];
  
 %if a varying rho should be utilized: 
 varying_rho=false; 
@@ -135,19 +135,21 @@ for k=1:300
     
     %Updating z tilde . 
     z_tilde = sum(x,2)/(Nu) + 1/(c.rho*Nu)*sum(lambda,2);
-
+    if underrelaxation==true 
+        z(:,k+1) = z(:,k) - 1/(Nu+1)*(z(:,k)-z_tilde);
+    else
+        z(:,k+1) =  z_tilde; 
+    end 
     %Updating lambda tilde.  
     for i=1:Nu
-        lambda_tilde(:,i) = lambda(:,i) + c.rho*(x(:,i)-z(:,k));
+        lambda_tilde(:,i) = lambda(:,i) + c.rho*(x(:,i)-z(:,k+1));
     end
 
    %Making underrelaxation if  (only walking a little bit and not all the
     %way!) 
     if underrelaxation==true 
-        z(:,k+1) = z(:,k) - 1/(Nu+1)*(z(:,k)-z_tilde);
         lambda = lambda - 1/(Nu+1)*(lambda - lambda_tilde);
     else
-        z(:,k+1) =  z_tilde; 
         lambda= lambda_tilde;
     end 
     
@@ -225,10 +227,12 @@ ax.XGrid = 'on'
 xlabel('Iterations')
 ylabel('Performance')
 fontname(f,'Times')
-legend('\rho=1','\rho=2','\rho=3','\rho=4','\rho=5')
+legend('\rho=2','\rho=3','\rho=4','\rho=5','\rho=6')
+
+%legend('\rho=1','\rho=2','\rho=3','\rho=4','\rho=5')
 
 set(gca,'fontname','times')
-ylim([-2 5])
+ylim([-2 6])
 
 % Making a zoomed in version of the differencing between the global cost value and the consensus cost value
 

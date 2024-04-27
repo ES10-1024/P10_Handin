@@ -3,8 +3,8 @@ function constants = scaled_standard_constants()
 %Define the maximum amount each pump are allowed to pump during a day
 
 
-constants.TdMax1=10;%3.6; 
-constants.TdMax2=10;%3.6;
+constants.TdMax1=3.6; 
+constants.TdMax2=3.6;
 
 % Define max mass flow for each pump (m^3/h) 
 constants.umax1=0.3;   
@@ -45,7 +45,7 @@ constants.rf1=0.35*10^5;
 constants.rf2=0.42*10^5;
 
 %Defining ressistance after 
-constants.rfTogether = 0.29*10^5; 
+constants.rfTogether =0.29*10^5; 
 
 % Defining pipe elevation In meters
 constants.z1=2; 
@@ -57,18 +57,15 @@ constants.Nu=2;
 constants.Nd=1;
 
 %% Initial values
-%initial water level [m]
-constants.h=0.2; 
 %Inital volumen [m^c]
-%constants.V=constants.h*constants.At; 
-constants.V=56/1000;
+constants.V=56/1000; %0.085;
 
 
 %% MPC tuning parameter
 
 
 %Defining wired K in the cost function
-constants.K=900 450; %450; %800
+constants.K=900; %450; %800
 
 %Setting sampletime in seconds
 constants.ts=600;%1; 
@@ -80,9 +77,9 @@ constants.Nc =24;
 constants.AccTime=6; 
 %% Variables defining for the consensus algortime 
 %Defining amount of iteration that the consensus ADMM should do 
-constants.iteration=150;
+constants.iteration=125; %125;%300;% 150;
 
-constants.rho=1; 
+constants.rho=4; 
 %% If the cost function should be scaled: 
 constants.scaled=true; 
 %% If disturbance with regard to demand should be utilized: 
@@ -91,6 +88,12 @@ constants.disturbance=true;
 constants.scaledEletricityPrice=true;
 %% If SMPC should be used for consensus ADMM 
 constants.UseSMPC=false; 
+%% If rho should changes its value in the end to ensure consensus 
+constants.changeRhoEnd=false;
+%The value rho should have in the end 
+constants.RhoEnd=2000; 
+%The iteration number that rho should change to a higher number 
+constants.iterationRhoChange=100; 
 %% Define if it is allowed to vary rho if it is the case how many iterations 
 constants.varying_rho=true; 
 constants.varying_rho_iterations_numbers=10; 
