@@ -88,7 +88,7 @@ costGlobal=costFunction(uAll,c,scaledCostFunction);
 %% Consensus problem
 
 %Defining the penalty parameter rho, which is desired to look at 
-rho_v=[2 3 4 5 6];
+rho_v=[1 2 3 4 5];
  
 %if a varying rho should be utilized: 
 varying_rho=false; 
@@ -101,7 +101,7 @@ tauDecr=2;
 useWaterTower=true;
 
 % Defining if underrelaxation should be utilized 
-underrelaxation=false; 
+underrelaxation=true; 
 
 %setting the number of agents based on if the water tower is utilized: 
 if useWaterTower == true 
@@ -227,12 +227,12 @@ ax.XGrid = 'on'
 xlabel('Iterations')
 ylabel('Performance')
 fontname(f,'Times')
-legend('\rho=2','\rho=3','\rho=4','\rho=5','\rho=6')
+%legend('\rho=2','\rho=3','\rho=4','\rho=5','\rho=6')
 
-%legend('\rho=1','\rho=2','\rho=3','\rho=4','\rho=5')
+legend('\rho=1','\rho=2','\rho=3','\rho=4','\rho=5')
 
 set(gca,'fontname','times')
-ylim([-2 6])
+ylim([-2 5])
 
 % Making a zoomed in version of the differencing between the global cost value and the consensus cost value
 
@@ -252,7 +252,7 @@ fontname(f,'Times')
 
 set(gca,'fontname','times')
 a = annotation('rectangle',[0 0 1 1],'Color','w');
-exportgraphics(f,'Plots/rho=1_to_5_hour_1_kappa=900_no_underrelexation.pdf')
+exportgraphics(f,'Plots/rho=1_to_5_hour_1_kappa=900.pdf')
 
 delete(a)
 

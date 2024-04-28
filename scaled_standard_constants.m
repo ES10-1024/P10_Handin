@@ -79,7 +79,7 @@ constants.AccTime=6;
 %Defining amount of iteration that the consensus ADMM should do 
 constants.iteration=125; %125;%300;% 150;
 
-constants.rho=4; 
+constants.rho=1; 
 %% If the cost function should be scaled: 
 constants.scaled=true; 
 %% If disturbance with regard to demand should be utilized: 
