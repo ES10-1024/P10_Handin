@@ -312,7 +312,7 @@ hold on
 plot(procentDifference)
 hold off 
 ytickformat('%g%%');
-xlim([100 300]) 
+xlim([100 200]) 
 ylim([-1 1])
 grid 
 
@@ -356,20 +356,20 @@ clear DiffFromConsensus
 for time=1:size(Xsave,4)
     for k=1:size(Xsave,3) 
         for entire=1:size(Xsave,1)
-            %DiffFromConsensus(k,time)=abs(Xsave(entire,1,k,time)-Xsave(entire,2,k,time))+abs(Xsave(entire,1,k,time)-Xsave(entire,3,k,time))+abs(Xsave(entire,2,k,time)-Xsave(entire,3,k,time));
+            DiffFromConsensus(k,time)=abs(Xsave(entire,1,k,time)-Xsave(entire,2,k,time))+abs(Xsave(entire,1,k,time)-Xsave(entire,3,k,time))+abs(Xsave(entire,2,k,time)-Xsave(entire,3,k,time));
             %DiffFromConsensus(k,time)=max(max(abs(Xsave(entire,1,k,time)-Xsave(entire,2,k,time)),abs(Xsave(entire,1,k,time)-Xsave(entire,3,k,time))),abs(Xsave(entire,2,k,time)-Xsave(entire,3,k,time)));
-            if mod(entire, 2) == 1
-                %The number is odd use first entire 
-                %DiffFromConsensus(entire,k,time)=abs(Xsave(entire,1,k,time)-Xsave(entire,2,k,time))+abs(Xsave(entire,1,k,time)-Xsave(entire,3,k,time));
-                DiffFromConsensus(entire,k,time)=(Xsave(entire,1,k,time)-Xsave(entire,3,k,time));
-            else
-                %The number is not odd use second entire
-                %DiffFromConsensus(entire,k,time)=abs(Xsave(entire,2,k,time)-Xsave(entire,1,k,time))+abs(Xsave(entire,2,k,time)-Xsave(entire,3,k,time));
-                DiffFromConsensus(entire,k,time)=(Xsave(entire,2,k,time)-Xsave(entire,1,k,time));
-            end
+            % if mod(entire, 2) == 1
+            %     %The number is odd use first entire 
+            %     %DiffFromConsensus(entire,k,time)=abs(Xsave(entire,1,k,time)-Xsave(entire,2,k,time))+abs(Xsave(entire,1,k,time)-Xsave(entire,3,k,time));
+            %     DiffFromConsensus(entire,k,time)=(Xsave(entire,1,k,time)-Xsave(entire,3,k,time));
+            % else
+            %     %The number is not odd use second entire
+            %     %DiffFromConsensus(entire,k,time)=abs(Xsave(entire,2,k,time)-Xsave(entire,1,k,time))+abs(Xsave(entire,2,k,time)-Xsave(entire,3,k,time));
+            %     DiffFromConsensus(entire,k,time)=(Xsave(entire,2,k,time)-Xsave(entire,1,k,time));
+            % end
         end 
-        %meanDiffFromConsensus(k,time)=sum(DiffFromConsensus(k,time))/((c.Nu+1)*c.Nc*3); 
-        meanDiffFromConsensus(k,time)=sum(DiffFromConsensus(:,k,time))*600/3600*1000;
+        meanDiffFromConsensus(k,time)=sum(DiffFromConsensus(k,time))/((c.Nu+1)*c.Nc*3); 
+        %meanDiffFromConsensus(k,time)=sum(DiffFromConsensus(:,k,time))*600/3600*1000;
 
     end 
     time
@@ -388,13 +388,39 @@ box on
 hold on 
 plot(meanDiffFromConsensus)
 hold off 
-xlim([100 300])
+xlim([100 200])
 grid 
-%exportgraphics(f,'Plots/Mean_abs_diff_from_consensus.pdf')
+exportgraphics(f,'Plots/Mean_abs_diff_from_consensus.pdf')
 
 %exportgraphics(gcf,'Plots/Mean_abs_diff_from_consensus.pdf', 'ContentType', 'vector')
+%% Plotting the Volume for each of the stakeholders 
+time=1; 
 
 
+[consumptionPred,consumptionActual(time,:)] = consumption(time*c.ts);
+%Moving the predicted consumption to a struct for each use to functions
+c.d=consumptionPred;
 
+%Determing the volume for each, of the 3 stakeholders 
+c.V=0.0560; 
+
+Vx1=ModelPredicted(c.V,Xsave(:,1,end,time),c.d);
+Vx2=ModelPredicted(c.V,Xsave(:,2,end,time),c.d);
+Vx3=ModelPredicted(c.V,Xsave(:,3,end,time),c.d);
+
+f=figure 
+hold on 
+    plot(Vx1)
+    plot(Vx2)
+    plot(Vx3)
+    yline(c.Vmin)
+    yline(c.Vmax)
+hold off
+grid 
+legend('Pump 1','Pump 2','Water Tower','Constraints') 
+ylabel('Water volume [m^{3}]') 
+xlabel('Hours [h_a]')
+
+exportgraphics(f,'Plots/Prediction_each_stakeholder.pdf') 
 
 
