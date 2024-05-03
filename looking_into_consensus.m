@@ -63,8 +63,8 @@ yyaxis right
 h2=stairs(lambdatermx1);
 ylim([-2e-3 2e-3])
 xlim([0 4000])
-%ylabel('$\lambda$ term', 'Interpreter', 'latex');
-ylabel('\boldmath$\lambda_i^{k\top}(\mathbf{x}_i-\mathbf{z}^k)$','Interpreter','latex');
+ylabel('$\lambda$ term', 'Interpreter', 'latex');
+%ylabel('\boldmath$\lambda_i^{k\top}(\mathbf{x}_i-\mathbf{z}^k)$','Interpreter','latex');
 xlabel('Iterations')
 set(gca,'fontname','times')
 % Create legend for items plotted on the right y-axis
@@ -100,7 +100,7 @@ f = figure;
 hold on;
 
 yyaxis left;
-stairs(procentDifference(:,1));
+plot(procentDifference(:,1));
 xline(30);
 ylim([-1.5 1.5]);
 xlim([0 200]);
@@ -110,14 +110,16 @@ ylabel('Performance');
 set(gca,'fontname','times');
 
 yyaxis right;
-h1 = stairs(rhox1);
-h2 = stairs(lambdatermx1);
+h1 = plot(rhox1);
+h2 = plot(lambdatermx1);
 ylim([-4e-3 4e-3]);
 xlim([0 200]);
 ylabel('$\rho$ \& $\lambda$ term', 'Interpreter', 'latex');
 xlabel('Iterations');
 set(gca,'fontname','times');
+text_str = '500 $\rho$';
 
+text(31,-3.5e-3,text_str, 'Interpreter', 'latex', 'FontSize', 12, 'FontName', 'Times New Roman');
 % Create legend for items plotted on the right y-axis
 legend([h1 h2], {'$\rho$ term', '$\lambda$ term'}, 'Interpreter', 'latex');
 

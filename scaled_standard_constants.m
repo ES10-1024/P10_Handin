@@ -87,25 +87,25 @@ constants.disturbance=true;
 %% If the electricity price should be scaled 
 constants.scaledEletricityPrice=true;
 %% If SMPC should be used for consensus ADMM 
-constants.UseSMPC=true; 
+constants.UseSMPC=false; 
 %% If rho should changes its value in the end to ensure consensus 
 constants.changeRhoEnd=false;
 %The value rho should have in the end 
-constants.RhoEnd=2000; 
+constants.RhoEnd=500; 
 %The iteration number that rho should change to a higher number 
-constants.iterationRhoChange=100; 
+constants.iterationRhoChange=30; 
 %% Define if it is allowed to vary rho if it is the case how many iterations 
 constants.varying_rho=true; 
 constants.varying_rho_iterations_numbers=10; 
-constants.mu=10;  
-constants.tauIncr=2;
-constants.tauDecr=2;
+constants.mu=5;  
+constants.tauIncr=1.5;
+constants.tauDecr=1.5;
 %% Scaling for conditioning 
 constants.condScaling=10000;
 %% SMPC varaibles 
   %% Constraints   
 %Defining the primenumber for the finith field 
-constants.prime=10000019;  
+constants.prime=4294967029;  
 
 % Defining scaling factor 
 constants.scaling=10000;
