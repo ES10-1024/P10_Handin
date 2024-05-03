@@ -87,7 +87,7 @@ constants.disturbance=true;
 %% If the electricity price should be scaled 
 constants.scaledEletricityPrice=true;
 %% If SMPC should be used for consensus ADMM 
-constants.UseSMPC=false; 
+constants.UseSMPC=true; 
 %% If rho should changes its value in the end to ensure consensus 
 constants.changeRhoEnd=false;
 %The value rho should have in the end 
@@ -110,5 +110,5 @@ constants.prime=10000019;
 % Defining scaling factor 
 constants.scaling=10000;
 
-constants.sMPCOffset=1;
+constants.sMPCOffset=5;
 end

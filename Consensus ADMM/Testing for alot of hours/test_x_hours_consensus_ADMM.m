@@ -50,25 +50,25 @@ clear i
 %Amount of hour that should be simulated: 
 hoursToSim=1; 
 %Number of iterations that the consensus ADMM should go though: 
-IterationsNumber=300; 
+IterationsNumber=10000; 
 
 %Defining the value of the penalty parameter 
 c.rho=1;% 
 
 %if a varying rho should be utilized: 
-varying_rho=false; 
+varying_rho=true; 
 
 %Values for varying rho 
-mu=10;  
-tauIncr=2; 
-tauDecr=2; 
+mu=5;  
+tauIncr=1.5; 
+tauDecr=1.5; 
 
 %If the eletricity price should be scaled such that the 2-norm always equal
 %one 
 scaledEletricityPrice=true;
 
 %Defining if underrelaxation should be utilized 
-underrelaxation=true; 
+underrelaxation=false; 
 
 %Setting if the scaled costFunction should be used
 scaledCostfunction=true; 
@@ -178,7 +178,7 @@ for k=1:IterationsNumber
     if underrelaxation==true 
         z(:,k+1) = z(:,k) - 1/(c.Nu+1+1)*(z(:,k)-z_tilde(:,k));
     else
-        z(:,k+1) =  z_tilde; 
+        z(:,k+1) =  z_tilde(:,k); 
     end 
     zTildeSave(:,:,k,time)=z(:,k+1); 
     %Updating lambda
@@ -297,29 +297,29 @@ ax.YGrid = 'on'
 ax.XGrid = 'on'
 
 
-xlabel("Hour [h_a]")
+xlabel("Iterations")
 ylabel("Performance")
 fontname(f,'Times')
 set(gca,'fontname','times')
 
-ylim([-50 60])
+ylim([-20 20])
 set(gca,'fontname','times')
 
 %Making a smaller box to another plot 
-axes('Position', [.5 .55 .35 .35])
+axes('Position', [.5 .57 .3 .3])
 box on 
 hold on 
 plot(procentDifference)
 hold off 
 ytickformat('%g%%');
-xlim([100 200]) 
-ylim([-1 1])
+xlim([50 200]) 
+ylim([-0.05 0.2])
 grid 
 
 
 
 
-exportgraphics(f,'Plots/percentage_diff_1000_hr_varying_rho_first_10_el_scaled_K=900.pdf')
+exportgraphics(f,'Plots/percentage_diff_1000_hr_varying_rho_first_10_el_scaled_K=900_changing_rho_end_the_end.pdf')
 %% Making a zoomed in version of the procentwise differencing between the global cost value and the consensus cost value
 f=figure
 hold on 
@@ -344,11 +344,11 @@ xlabel('Hour [h_a]')
 ylabel('$\rho$ value', 'Interpreter', 'latex')
 box off 
 grid on 
-ylim([0 10])
+ylim([1 3])
 
 set(gca,'fontname','times')
 
-exportgraphics(gcf,'Plots/rho_value_10_iterations.pdf','ContentType','image')
+%exportgraphics(gcf,'Plots/rho_value_10_iterations.pdf','ContentType','image')
 
 %% Determining the average disargement from consensus 
 clear meanDiffFromConsensus 
@@ -375,7 +375,7 @@ for time=1:size(Xsave,4)
     time
 end 
 
-%% Making a plot on te average disargment from consensus 
+%% Making a plot on the average disargment from consensus 
 f=figure
 plot(meanDiffFromConsensus) 
 xlabel('Iterations')
@@ -390,12 +390,12 @@ plot(meanDiffFromConsensus)
 hold off 
 xlim([100 200])
 grid 
-exportgraphics(f,'Plots/Mean_abs_diff_from_consensus.pdf')
+%exportgraphics(f,'Plots/Mean_abs_diff_from_consensus.pdf','ContentType','image')
 
 %exportgraphics(gcf,'Plots/Mean_abs_diff_from_consensus.pdf', 'ContentType', 'vector')
 %% Plotting the Volume for each of the stakeholders 
 time=1; 
-
+iterationsNumber=120; 
 
 [consumptionPred,consumptionActual(time,:)] = consumption(time*c.ts);
 %Moving the predicted consumption to a struct for each use to functions
@@ -404,9 +404,9 @@ c.d=consumptionPred;
 %Determing the volume for each, of the 3 stakeholders 
 c.V=0.0560; 
 
-Vx1=ModelPredicted(c.V,Xsave(:,1,end,time),c.d);
-Vx2=ModelPredicted(c.V,Xsave(:,2,end,time),c.d);
-Vx3=ModelPredicted(c.V,Xsave(:,3,end,time),c.d);
+Vx1=ModelPredicted(c.V,Xsave(:,1,iterationsNumber,time),c.d);
+Vx2=ModelPredicted(c.V,Xsave(:,2,iterationsNumber,time),c.d);
+Vx3=ModelPredicted(c.V,Xsave(:,3,iterationsNumber,time),c.d);
 
 f=figure 
 hold on 
@@ -420,7 +420,8 @@ grid
 legend('Pump 1','Pump 2','Water Tower','Constraints') 
 ylabel('Water volume [m^{3}]') 
 xlabel('Hours [h_a]')
+set(gca,'fontname','times')
 
-exportgraphics(f,'Plots/Prediction_each_stakeholder.pdf') 
+%exportgraphics(f,'Plots/Prediction_each_stakeholder_changing_rho_end_the_end.pdf','ContentType','image') 
 
 

@@ -16,7 +16,7 @@ c=scaled_standard_constants;
 
 %% getting the  one hour of eletricity price and demand data
 %Select the hour which is desired to work with 
-hour=1;  
+hour=1; %650;  
 
 %Determining the time in physical seconds 
 currentTime=hour*c.ts;
@@ -121,7 +121,6 @@ for j=1:size(rho_v,2)
 z=zeros(c.Nc*c.Nu,1); 
 lambda = zeros(c.Nc*c.Nu,Nu); 
 x = zeros(c.Nc*c.Nu,Nu);
-xBar=0;
 
 %Picking the penalty parameter to be used 
 c.rho = rho_v(j);
@@ -143,6 +142,7 @@ for k=1:300
     %Updating lambda tilde.  
     for i=1:Nu
         lambda_tilde(:,i) = lambda(:,i) + c.rho*(x(:,i)-z(:,k+1));
+         %lambda_tilde(:,i) = lambda(:,i) + c.rho*(x(:,i)-z(:,k));
     end
 
    %Making underrelaxation if  (only walking a little bit and not all the
@@ -195,7 +195,7 @@ for k=1:300
              c.rho=c.rho/tauDecr; 
          end 
          %Saving the used penalty paramter
-         saveRho(k,time)=c.rho;
+         saveRho(k,j)=c.rho;
     end 
     %Printing how far we got! 
     k
@@ -252,7 +252,7 @@ fontname(f,'Times')
 
 set(gca,'fontname','times')
 a = annotation('rectangle',[0 0 1 1],'Color','w');
-exportgraphics(f,'Plots/rho=1_to_5_hour_1_kappa=900.pdf')
+%exportgraphics(f,'Plots/rho=1_to_5_hour_1_kappa=900.pdf')
 
 delete(a)
 

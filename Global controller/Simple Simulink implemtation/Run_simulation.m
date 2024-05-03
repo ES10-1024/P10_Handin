@@ -11,7 +11,7 @@ addpath("..\Subsystem Reference\")
 addpath("..\..\")
 c=scaled_standard_constants; 
 %% Define the amount of scaled hours it is desired to simulate for: 
-simHour=1; 
+simHour=72; 
 
 %Making calculatation to get it to fit with the sacled time and make it
 %such matlab likes it 
@@ -50,14 +50,14 @@ f=figure
 subplot(3,1,1)
 hold on
 yyaxis left
-ylabel('Mass flow [m^{3}/h]' )
+ylabel('Summed pump mass flow [m^{3}/h]' )
 stairs(summedMassflow) 
 yyaxis right 
-ylabel('El Prices [Euro/kWh]') 
+ylabel('Electricity Pric [Euro/kWh]') 
 stairs(ElPrices)
-xlabel('Hours scaled') 
+xlabel('Time [h_a]') 
 grid 
-xlim([0 500])
+xlim([0 72])
 hold off 
 set(gca,'fontname','times')
 
@@ -70,9 +70,9 @@ yline(c.Vmin)
 hold off 
 legend('Volume','Constraints')
 ylabel('Volume [m^{3}]') 
-xlim([0 500])
+xlim([0 72])
 grid 
-xlabel('Hours scaled') 
+xlabel('Time [h_a]') 
 set(gca,'fontname','times')
 
 %Predicted consumption and presented consumption
@@ -82,14 +82,15 @@ stairs(consumptionPred)
 stairs(consumptionNoise)
 hold off 
 grid 
-legend('Predicted consumption','Actual consumption')
-xlim([0 500])
+%legend('Predicted consumption','Actual consumption')
+legend('Predicted flow','Actual flow')
+xlim([0 72])
 ylabel('Mass flow [m^{3}/h]' )
-xlabel('Hours scaled') 
+xlabel('Time [h_a]') 
 set(gca,'fontname','times')
 
 
 
 
-%exportgraphics(f,'global_controller_scaled_with_disturbance_with_Kappa.pdf')
+exportgraphics(f,'global_controller_scaled_with_disturbance_with_Kappa.pdf')
 
