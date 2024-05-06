@@ -189,33 +189,28 @@ stairs(consensusCon.summedMassflow)
 ylabel('ADMM $\sum q_i$ [m$^{3}$/h]', 'Interpreter', 'latex');
 hold off 
 grid  on 
-set(gca,'fontname','times')
-
 
 % Volume 
-subplot(3,1,2)
+subplot(3,2,3)
+hold on 
 yyaxis left 
 plot(globalCon.Volume)
-ylabel('Global Volume [m$^{3}$]', 'Interpreter', 'latex');
 yyaxis right 
 plot(consensusCon.Volume)
-ylabel('ADMM Volume [m$^{3}$]', 'Interpreter', 'latex');
-yline(c.Vmax)
-yline(c.Vmin)
-grid 
-set(gca,'fontname','times')
-
+%yline(c.Vmax)
+%yline(c.Vmin)
+hold off 
 
 % Eletricity price 
 subplot(3,1,3)
 stairs(globalCon.ElPrices)
 xlabel('Time [h_a]') 
-ylabel('Price [Euro/kWh]', 'Interpreter', 'latex');
+ylabel('Electricity Price [Euro/kWh]') 
 grid
-set(gca,'fontname','times')
 
-exportgraphics(f,'Sim_results.pdf','ContentType','vector') 
-
+% Adjust position of the second subplot to match the others
+% pos = get(gca, 'Position');
+% set(gca, 'Position', [pos(1) pos(2) pos(3) 0.35]);
 
 
 

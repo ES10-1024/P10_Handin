@@ -87,9 +87,9 @@ constants.disturbance=true;
 %% If the electricity price should be scaled 
 constants.scaledEletricityPrice=true;
 %% If SMPC should be used for consensus ADMM 
-constants.UseSMPC=false; 
+constants.UseSMPC=true; 
 %% If rho should changes its value in the end to ensure consensus 
-constants.changeRhoEnd=false;
+constants.changeRhoEnd=true;
 %The value rho should have in the end 
 constants.RhoEnd=500; 
 %The iteration number that rho should change to a higher number 
