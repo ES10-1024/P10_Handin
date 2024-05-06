@@ -34,7 +34,7 @@ save('test.mat')
 %%
 hold on 
 plot(tow.tank_tower_mm)
-plot(consensusCon.simData.logsout{12}.Values.Data(end-1,1))
+plot(consensusCon.simData.logsout{12}.Values.Data(1:end-1,1))
 hold off 
 grid 
 xlabel('Time [h_a]')
