@@ -15,7 +15,7 @@ addpath("Consensus ADMM\Simulink implementing\Subsystem Reference\")
 addpath("Shamirs Secret Sharing\Functions\")
 c=scaled_standard_constants; 
 %% Define simulation time 
-simHour=10; 
+simHour=2; 
 simTime=simHour/c.AccTime*3600; 
 c.Tsim=num2str(simTime); 
 %% Simulating the global controller
