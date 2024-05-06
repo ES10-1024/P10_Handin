@@ -4,6 +4,36 @@ function [cost] = costFunction(u,c,scaledCost)
 %c= standard constants 
 %scaledCost = if the scaled cost function should be used. 
 
+%% Making A and v matrices for the optimization problem
+%A_1 each row have 2 ones such that the flow from the given time stamp is
+%added
+c.A_1=[];
+for i=1:c.Nc
+    c.A_1 = blkdiag(c.A_1,ones(1,c.Nu));
+end
+%Lower trangiular matrix to add consumption and inflow (integral) 
+ c.A_2 = tril(ones(c.Nc,c.Nc));
+
+%Making vi vectors utilized to pick out 1 of the 2 pumps values, add them up
+%and used to make extration limit. 
+c.v1=ones(c.Nu*c.Nc,1);
+c.v1(2:c.Nu:end) =0; 
+
+c.v2=ones(c.Nu*c.Nc,1);
+c.v2(1:c.Nu:end) =0;
+
+%Making matrix which picks out 1 of the pumps for the enitre control
+%horizion
+c.A_31=[];
+for i=1:c.Nc
+    c.A_31 = blkdiag(c.A_31,[1 0]);
+end
+
+c.A_32=[];
+for i=1:c.Nc
+    c.A_32 = blkdiag(c.A_32,[0 1]);
+end
+clear i
 
 %% Defining cost functions: 
 % Water level in water tower (need for the cost functions)

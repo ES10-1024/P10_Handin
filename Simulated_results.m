@@ -15,7 +15,7 @@ addpath("Consensus ADMM\Simulink implementing\Subsystem Reference\")
 addpath("Shamirs Secret Sharing\Functions\")
 c=scaled_standard_constants; 
 %% Define simulation time 
-simHour=2; 
+simHour=24; 
 simTime=simHour/c.AccTime*3600; 
 c.Tsim=num2str(simTime); 
 %% Simulating the global controller
@@ -60,21 +60,34 @@ for index1=2:size(globalCon.simData.logsout{1}.Values.Data,3)
     end 
 end 
 %% 
-%Determinging the electricty bill  
+%Determinging the electricity bill   and cost function, 
 for index=2:size(globalCon.simData.logsout{1}.Values.Data,3)
     c.d=globalCon.simData.logsout{4}.Values.Data(:,:,index);
     [ElPrices] = ElectrictyPrices(index*c.ts);
+    %Eletricity bill 
     if index==2 
         [globalCon.Bill(index-1,1)]= eletrictyBillV2(globalCon.simData.logsout{2}.Values.Data(index,:)',ElPrices,c,globalCon.Volume(index-1,1));
         [consensusCon.Bill(index-1,1)]= eletrictyBillV2(consensusCon.uAll(:,index),ElPrices,c,consensusCon.Volume(index-1,1));
         procentEldiff(index-1,1)=(consensusCon.Bill(index-1,1)-globalCon.Bill(index-1,1))/globalCon.Bill(index-1,1)*100;
-    else 
+
+    else
        [globalCon.Bill(index-1,1)] = eletrictyBillV2(globalCon.simData.logsout{2}.Values.Data(index,:)',ElPrices,c,globalCon.Volume(index-1,1));
         globalCon.Bill(index-1,1)=globalCon.Bill(index-1,1)+globalCon.Bill(index-2,1);
        [consensusCon.Bill(index-1,1)]= eletrictyBillV2(consensusCon.uAll(:,index),ElPrices,c,consensusCon.Volume(index-1,1));
         consensusCon.Bill(index-1,1)=consensusCon.Bill(index-1,1)+consensusCon.Bill(index-2,1);
        procentEldiff(index-1,1)=(consensusCon.Bill(index-1,1)-globalCon.Bill(index-1,1))/globalCon.Bill(index-1,1)*100;
+
     end 
+        c.Je=ElPrices; 
+        scaledCost=true; 
+        %Cost: 
+        c.V=globalCon.Volume(index,1);
+        globalCon.cost(index-1,1)=costFunction(globalCon.simData.logsout{2}.Values.Data(index,:)',c,scaledCost);
+        c.V=consensusCon.Volume(index,1);
+        consensusCon.cost(index-1,1)=costFunction(consensusCon.uAll(:,index),c,scaledCost); 
+        costDifference(index-1,1)=consensusCon.cost(index-1,1)-globalCon.cost(index-1,1); 
+        procentDifference(index-1)=costDifference(index-1,1).*inv(globalCon.cost(index-1,1)).*100;
+        
 end 
 %% Making the plot 
 
@@ -161,3 +174,5 @@ ylim([-1.5 0.5])
 disp("Electricity bill difference is") 
 elProDiff=(consensusCon.Bill(end,1)-globalCon.Bill(end,1))/globalCon.Bill(end,1)*100
 disp("Procent")
+
+%% 
