@@ -15,7 +15,7 @@ addpath("Consensus ADMM\Simulink implementing\Subsystem Reference\")
 addpath("Shamirs Secret Sharing\Functions\")
 c=scaled_standard_constants; 
 %% Define simulation time 
-simHour=24; 
+simHour=250 ; 
 simTime=simHour/c.AccTime*3600; 
 c.Tsim=num2str(simTime); 
 %% Simulating the global controller
@@ -23,7 +23,7 @@ globalCon.simData=sim('GlobalMPC.slx',"StartTime",'0',"StopTime",c.Tsim,'FixedSt
 %% Simulating the consensus controller 
 consensusCon.simData=sim('ADMM_consensus.slx',"StartTime",'0',"StopTime",c.Tsim,'FixedStep','200');
 %% 
-save('Simulated_results_fmincon.mat')
+save('Simulated_results_fmincon240hr.mat')
 
 %% Picking out a few things which is needed for the comparision: 
 %Summing the mass flows at each time step  [m^3/h]
