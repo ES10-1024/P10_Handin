@@ -35,18 +35,23 @@ save('test.mat')
 hold on 
 plot(tow.tank_tower_mm)
 plot(consensusCon.simData.logsout{12}.Values.Data(1:end-1,1))
+yline(100)
+yline(550)
 hold off 
 grid 
 xlabel('Time [h_a]')
 ylabel('Water level [mm]')
 
-legend('Lab','Sim')
+legend('Lab','Sim','Constraints')
 %% Summing massflows 
 for time=1:size(tow.tank_tower_mm,2)
-    for j=1:24
-        summedFlowsSim(j,time)=x1(j,time)
-    end 
+    summedMassFlowSim(time,1)=consensusCon.simData.logsout{15}+consensusCon.simData.logsout{16}; 
 end 
+
+
+
+
+
 
 %% Picking out the end result
 index=1; 
