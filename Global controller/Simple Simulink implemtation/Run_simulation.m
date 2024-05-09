@@ -11,18 +11,18 @@ addpath("..\Subsystem Reference\")
 addpath("..\..\")
 c=scaled_standard_constants; 
 %% Define the amount of scaled hours it is desired to simulate for: 
-simHour=72; 
+simHour=500; 
 
 %Making calculatation to get it to fit with the sacled time and make it
 %such matlab likes it 
 simTime=simHour/c.AccTime*3600; 
 c.Tsim=num2str(simTime); 
 
-%c.tsSim=num2str(c.ts*3600); 
+%c.V=111/1000*c.At; 
 
 %% Running the simulation 
 simData=sim('GlobalMPC.slx',"StartTime",'0',"StopTime",c.Tsim,'FixedStep','200');
-
+save('global_controller.mat')
 %% Making a plot of the result  
 clf 
 % adding the mass flows for the given time stamp  

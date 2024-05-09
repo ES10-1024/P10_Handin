@@ -13,7 +13,7 @@ addpath("Consensus ADMM\Simulink implementing\")
 addpath("Consensus ADMM\Simulink implementing\Functions\")
 addpath("Consensus ADMM\Simulink implementing\Subsystem Reference\")
 addpath("Shamirs Secret Sharing\Functions\")
-c=scaled_standard_constants; 
+%c=scaled_standard_constants; 
 %% Define simulation time 
 simHour=250 ; 
 simTime=simHour/c.AccTime*3600; 
@@ -60,8 +60,9 @@ for index1=2:size(globalCon.simData.logsout{1}.Values.Data,3)
     end 
 end 
 %% 
+%What water volume should be used? 
 %Determinging the electricity bill   and cost function, 
-for index=2:size(globalCon.simData.logsout{1}.Values.Data,3)
+for index=2:size(globalCon.simData.logsout{1}.Values.Data,3)-1
     c.d=globalCon.simData.logsout{4}.Values.Data(:,:,index);
     [ElPrices] = ElectrictyPrices(index*c.ts);
     %Eletricity bill 
@@ -190,7 +191,7 @@ ylabel('ADMM $\sum q_i$ [m$^{3}$/h]', 'Interpreter', 'latex');
 hold off 
 grid  on 
 set(gca,'fontname','times')
-
+xlim([0 240])
 
 % Volume 
 subplot(3,1,2)
@@ -202,6 +203,7 @@ plot(consensusCon.Volume)
 ylabel('ADMM Volume [m$^{3}$]', 'Interpreter', 'latex');
 yline(c.Vmax)
 yline(c.Vmin)
+xlim([0 240])
 grid 
 set(gca,'fontname','times')
 
@@ -212,6 +214,7 @@ stairs(globalCon.ElPrices)
 xlabel('Time [h_a]') 
 ylabel('Price [Euro/kWh]', 'Interpreter', 'latex');
 grid
+xlim([0 240])
 set(gca,'fontname','times')
 
 exportgraphics(f,'Sim_results.pdf','ContentType','vector') 

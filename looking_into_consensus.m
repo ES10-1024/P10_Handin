@@ -126,4 +126,27 @@ legend([h1 h2], {'$\rho$ term', '$\lambda$ term'}, 'Interpreter', 'latex');
 hold off;
 
 exportgraphics(f,'rhoTerm.pdf','ContentType','vector') 
+%% 
+xBar=mean(Xsave,2); 
 
+for index=1:size(xBar,3) 
+    if index<=9 
+        rho=saveRho(index,1);
+    else 
+        rho=saveRho(end,1);
+    end 
+    r(index,1)=norm(Xsave(:,1,index)-xBar(:,index),2)+norm(Xsave(:,2,index)-xBar(:,index),2)+norm(Xsave(:,3,index)-xBar(:,index),2);
+    
+    if index==1 
+        s(index,1)=3*rho*norm(xBar(:,index),2); 
+    else
+        s(index,1)=3*rho*norm(xBar(:,index)-xBar(:,index-1),2);
+    end 
+
+end 
+
+%%
+hold on 
+plot(r)
+plot(s)
+hold off 
