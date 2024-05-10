@@ -12,7 +12,7 @@ addpath("..\..\")
 
 addpath("Plots\")
 
-c=scaled_standard_constants; 
+%c=scaled_standard_constants; 
 
 
 %% Making A and v matrices for the optimization problem
@@ -50,9 +50,9 @@ clear i
 %Amount of hour that should be simulated: 
 hoursToSim=5; 
 %Number of iterations that the consensus ADMM should go though: 
-maxIterations=200; 
+maxIterations=500; 
 stopCriterionStart=35;
-betweenStop=5;
+betweenStopCheck=5;
 
 
 %Defining the value of the penalty parameter 
@@ -169,10 +169,10 @@ end
 
 %% Running the for loop for the iteration of the consensus ADMM  
 %setting iterations count to one: 
-k=1; 
+k = 1; 
 %Setting stopping criteria to false 
 stopCriterion = false; 
-startXnorm=stopCriterionStart-1; 
+startXbar = stopCriterionStart - 1; 
 
 while ~stopCriterion && k < maxIterations
     if time > 1 && k==1 
@@ -255,10 +255,10 @@ while ~stopCriterion && k < maxIterations
     end 
         
     %% Stopping criterion: 
-     if k== startXnorm 
+     if k== startXbar 
         %Determine the mean value of x/mass flos 
         xBar(:,k)=sum(x,2)/(c.Nu+1);
-        startXnorm=startXnorm+betweenStop;
+        startXbar=startXbar+betweenStopCheck;
      end 
 
     if k >= 35 && mod(k - 35, 5) == 0 
@@ -349,12 +349,13 @@ hold off
 ytickformat('%g%%');
 xlim([50 200]) 
 ylim([-0.05 0.2])
+%ylim([-2 1])
 grid 
 
 
 
-
-%exportgraphics(f,'Plots/percentage_diff_1000_hr_varying_rho_first_10_el_scaled_K=900_changing_rho_end_the_end.pdf')
+%exportgraphics(f,'Plots/percentage_diff_1000_hr_varying_rho_first_10_el_scaled_K=900.pdf')
+exportgraphics(f,'Plots/percentage_diff_1000_hr_varying_rho_first_10_el_scaled_K=900_changing_rho_end_the_end.pdf')
 %% Making a zoomed in version of the procentwise differencing between the global cost value and the consensus cost value
 f=figure
 hold on 
@@ -379,11 +380,11 @@ xlabel('Hour [h_a]')
 ylabel('$\rho$ value', 'Interpreter', 'latex')
 box off 
 grid on 
-ylim([1 3])
+%ylim([1 5])
 
 set(gca,'fontname','times')
 
-%exportgraphics(gcf,'Plots/rho_value_10_iterations.pdf','ContentType','image')
+exportgraphics(gcf,'Plots/rho_value_10_iterations.pdf','ContentType','image')
 
 %% Determining the average disargement from consensus 
 clear meanDiffFromConsensus 
@@ -425,12 +426,12 @@ plot(meanDiffFromConsensus)
 hold off 
 xlim([100 200])
 grid 
-%exportgraphics(f,'Plots/Mean_abs_diff_from_consensus.pdf','ContentType','image')
+exportgraphics(f,'Plots/Mean_abs_diff_from_consensus.pdf','ContentType','image')
 
 %exportgraphics(gcf,'Plots/Mean_abs_diff_from_consensus.pdf', 'ContentType', 'vector')
 %% Plotting the Volume for each of the stakeholders 
 time=1; 
-iterationsNumber=120; 
+iterationsNumber=125; 
 
 [consumptionPred,consumptionActual(time,:)] = consumption(time*c.ts);
 %Moving the predicted consumption to a struct for each use to functions
@@ -457,6 +458,6 @@ ylabel('Water volume [m^{3}]')
 xlabel('Hours [h_a]')
 set(gca,'fontname','times')
 
-%exportgraphics(f,'Plots/Prediction_each_stakeholder_changing_rho_end_the_end.pdf','ContentType','image') 
+exportgraphics(f,'Plots/Prediction_each_stakeholder_changing_rho_end_the_end.pdf','ContentType','image') 
 
 

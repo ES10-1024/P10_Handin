@@ -6,10 +6,12 @@ clc
 
 
 %% Loading in the data:
-addpath("C:\Users\is123\Downloads\")
+addpath("C:\Users\is123\Documents\GitHub\P10_Handin\Consensus ADMM\Saved workspaces V4")
 
 fixed=load("Stopping_own.mat");
 varaible=load("stopping_criteria_boyd.mat");
+
+fixed125=load("1000hr_mu2d5_tau1d5_rho_multiplied_500_at_30_V2"); 
 
 %% 
 % Loop through each column
@@ -37,10 +39,10 @@ set(gca,'fontname','times')
 hold off 
 grid 
 legend('Fixed','Varying')
+xlim([200 400])
 
 
-
-exportgraphics(f,'fixed_vs_varying_iterations.pdf','ContentType','vector')
+exportgraphics(f,'fixed_vs_varying_iterations_short.pdf','ContentType','vector')
 
 %% Plotting performance: 
 f=figure
@@ -48,6 +50,7 @@ ax=axes;
 hold on 
 stairs(fixed.performanceEnd)
 stairs(varaible.performanceEnd)
+stairs(fixed125.procentDifference(125,:))
 xlabel('Hours [h_a]')
 ylabel("Performance")
 set(gca,'fontname','times')
@@ -57,8 +60,9 @@ ytickformat(ax, 'percentage');
 ax.YGrid = 'on'
 %ytickformat(ax, '%g%%');
 ax.XGrid = 'on'
-legend('Fixed','Varying')
+legend('Fixed','Varying','125')
+xlim([200 400])
 
-exportgraphics(f,'fixed_vs_varying_performance.pdf','ContentType','vector')
+exportgraphics(f,'fixed_vs_varying_performance_short.pdf','ContentType','vector')
 
 

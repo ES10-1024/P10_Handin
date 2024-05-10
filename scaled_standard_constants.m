@@ -101,8 +101,8 @@ constants.mu=5;
 constants.tauIncr=1.5;
 constants.tauDecr=1.5;
 %% Stopping criteria values 
-constants.epsilonPri=0.0686; %0.90; %1e-2; 
-constants.epsilonDual=0.0599; %0.90; %1e-2;
+constants.epsilonPri=0.07; %0.90; %1e-2; 
+constants.epsilonDual=0.06; %0.90; %1e-2;
 constants.epsilonRel=10^(-3); 
 constants.epsilonAbs=0.05; 
 %% Scaling for conditioning 

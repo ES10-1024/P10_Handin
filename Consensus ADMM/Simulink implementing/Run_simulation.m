@@ -29,6 +29,7 @@ simHour=1; %48;
 simTime=simHour/c.AccTime*3600; 
 c.Tsim=num2str(simTime); 
 
+c.V=465/1000*c.At;
 
 %% Running the simulation 
 simData=sim('ADMM_consensus.slx',"StartTime",'0',"StopTime",c.Tsim,'FixedStep','200');
