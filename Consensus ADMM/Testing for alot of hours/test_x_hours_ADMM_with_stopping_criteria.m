@@ -341,7 +341,7 @@ ylim([-20 20])
 set(gca,'fontname','times')
 
 %Making a smaller box to another plot 
-axes('Position', [.5 .57 .3 .3])
+axes('Position', [.5 .7 .25 .25])
 box on 
 hold on 
 plot(procentDifference)
@@ -355,7 +355,7 @@ grid
 
 
 %exportgraphics(f,'Plots/percentage_diff_1000_hr_varying_rho_first_10_el_scaled_K=900.pdf')
-exportgraphics(f,'Plots/percentage_diff_1000_hr_varying_rho_first_10_el_scaled_K=900_changing_rho_end_the_end.pdf')
+%exportgraphics(f,'Plots/percentage_diff_1000_hr_varying_rho_first_10_el_scaled_K=900_changing_rho_end_the_end.pdf')
 %% Making a zoomed in version of the procentwise differencing between the global cost value and the consensus cost value
 f=figure
 hold on 
@@ -384,7 +384,7 @@ grid on
 
 set(gca,'fontname','times')
 
-exportgraphics(gcf,'Plots/rho_value_10_iterations.pdf','ContentType','image')
+%exportgraphics(gcf,'Plots/rho_value_10_iterations.pdf','ContentType','image')
 
 %% Determining the average disargement from consensus 
 clear meanDiffFromConsensus 
@@ -426,12 +426,12 @@ plot(meanDiffFromConsensus)
 hold off 
 xlim([100 200])
 grid 
-exportgraphics(f,'Plots/Mean_abs_diff_from_consensus.pdf','ContentType','image')
+%exportgraphics(f,'Plots/Mean_abs_diff_from_consensus.pdf','ContentType','image')
 
 %exportgraphics(gcf,'Plots/Mean_abs_diff_from_consensus.pdf', 'ContentType', 'vector')
 %% Plotting the Volume for each of the stakeholders 
 time=1; 
-iterationsNumber=125; 
+iterationsNumber=200; 
 
 [consumptionPred,consumptionActual(time,:)] = consumption(time*c.ts);
 %Moving the predicted consumption to a struct for each use to functions
@@ -458,6 +458,32 @@ ylabel('Water volume [m^{3}]')
 xlabel('Hours [h_a]')
 set(gca,'fontname','times')
 
-exportgraphics(f,'Plots/Prediction_each_stakeholder_changing_rho_end_the_end.pdf','ContentType','image') 
+%exportgraphics(f,'Plots/Prediction_each_stakeholder_changing_rho_end_the_end.pdf','ContentType','image') 
+
+%% 
+for time=1:size(procentDifference,2)-1
+    iterationsNumber=125; 
+    
+    [consumptionPred,consumptionActual(time,:)] = consumption(time*c.ts);
+    %Moving the predicted consumption to a struct for each use to functions
+    c.d=consumptionPred;
+    
+    %Determing the volume for each, of the 3 stakeholders 
+    c.V=0.0560; 
+    
+    Vx1(:,time)=ModelPredicted(c.V,Xsave(:,1,iterationsNumber,time),c.d);
+    Vx2(:,time)=ModelPredicted(c.V,Xsave(:,2,iterationsNumber,time),c.d);
+    Vx3(:,time)=ModelPredicted(c.V,Xsave(:,3,iterationsNumber,time),c.d);
+
+    %Determining max difference: 
+    ONE(:,time)=Vx1(:,time)-Vx2(:,time); 
+    TWO(:,time)=Vx1(:,time)-Vx3(:,time); 
+    TREE(:,time)=Vx2(:,time)-Vx3(:,time); 
+    maxDifference(:,time)=max(max(ONE(:,time),TWO(:,time)),TREE(:,time));
 
 
+
+end 
+%% 
+f=figure
+plot(maxDifference*1000)
