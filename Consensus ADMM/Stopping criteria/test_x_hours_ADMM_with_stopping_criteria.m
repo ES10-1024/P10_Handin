@@ -62,7 +62,7 @@ c.rho=1;%
 varying_rho=true; 
 
 %Values for varying rho 
-mu=5;  
+mu=1;  
 tauIncr=1.5; 
 tauDecr=1.5; 
 
