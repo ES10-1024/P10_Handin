@@ -58,7 +58,7 @@ c.rho=1;%
 %if a varying rho should be utilized: 
 varying_rho=true; 
 
-%Values for varying rho 
+%Vaues for varying rho 
 mu=1;  
 tauIncr=1.5; 
 tauDecr=1.5; 
@@ -167,7 +167,9 @@ end
 %% Running the for loop for the iteration of the consensus ADMM  
 
 for k=1:IterationsNumber
-
+    % if time > 1 && k==1 
+    %     c.rho=saveRho(end,time-1); 
+    % end 
     %Each agent solver their own optimization problem: 
     parfor(i=1:c.Nu+1)
         x(:,i) = u_consensus_fmincon(lambda(:,i),z(:,k),c,i,x(:,i),scaledCostfunction);
@@ -180,7 +182,11 @@ for k=1:IterationsNumber
     else
         z(:,k+1) =  z_tilde(:,k); 
     end 
-    zTildeSave(:,:,k,time)=z(:,k+1); 
+
+    z_tildeSave(:,:,k,time)=z_tilde(:,k);
+    zSave(:,:,k,time)=z(:,k+1);
+
+
     %Updating lambda
     for i=1:c.Nu+1
         lambda_tilde(:,i) = lambda(:,i) + c.rho*(x(:,i)-z(:,k+1));
@@ -195,7 +201,6 @@ for k=1:IterationsNumber
         lambda= lambda_tilde;
     end 
     lambdaSave(:,:,k,time)=lambda; 
-    zSave(:,:,k,time)=z(:,k+1);
     
     % Picking out the values from the solution which will be used, at each 
     % pump station. These values are used to determine cost and comparing:
@@ -217,7 +222,7 @@ for k=1:IterationsNumber
     costDifference(k,time)=costConsensus(k,time)-costGlobal(:,time); 
     
     %Varying rho if desired: 
-    if varying_rho==true %&& k<= c.varying_rho_iterations_numbers
+    if varying_rho==true %&& k<11 
         r=0;
         s=0; 
         %Determine the mean value of x/mass flos 
@@ -228,12 +233,14 @@ for k=1:IterationsNumber
             r=norm(x(:,index)-xBar(:,k))+r; 
         end 
         r=sqrt(r); 
+        
         %determine the dual residual 
         if k==1
             s=sqrt((c.Nu+1)*c.rho^2*norm(xBar(:,k))^2);
         else
             s=sqrt((c.Nu+1)*c.rho^2*norm(xBar(:,k)-xBar(:,k-1))^2);
         end 
+
         %Updating rho if neccesary
          if r >mu*s 
             c.rho=tauIncr*c.rho; 
@@ -243,7 +250,11 @@ for k=1:IterationsNumber
          %Saving the used penalty paramter
          saveRho(k,time)=c.rho;
     end 
-        
+
+    % if k =30 
+    %     c.rho=saveRho(end,time)*500;
+    % end 
+
     %Printing how far we got! 
     k
     time 
@@ -272,6 +283,8 @@ grid
 ylim([-2 2])
 drawnow
 end 
+%% 
+%%
 %%
  %Determing the time it took: 
 toc 
@@ -297,29 +310,29 @@ ax.YGrid = 'on'
 ax.XGrid = 'on'
 
 
-xlabel("Iterations")
+xlabel("Hour [h_a]")
 ylabel("Performance")
 fontname(f,'Times')
 set(gca,'fontname','times')
 
-ylim([-20 20])
+ylim([-50 60])
 set(gca,'fontname','times')
 
 %Making a smaller box to another plot 
-axes('Position', [.5 .57 .3 .3])
+axes('Position', [.5 .55 .35 .35])
 box on 
 hold on 
 plot(procentDifference)
 hold off 
 ytickformat('%g%%');
-xlim([50 200]) 
-ylim([-0.05 0.2])
+xlim([100 300]) 
+ylim([-1 1])
 grid 
 
 
 
 
-exportgraphics(f,'Plots/percentage_diff_1000_hr_varying_rho_first_10_el_scaled_K=900_changing_rho_end_the_end.pdf')
+%exportgraphics(f,'Plots/percentage_diff_1000_hr_varying_rho_first_10_el_scaled_K=900.pdf')
 %% Making a zoomed in version of the procentwise differencing between the global cost value and the consensus cost value
 f=figure
 hold on 
@@ -344,7 +357,7 @@ xlabel('Hour [h_a]')
 ylabel('$\rho$ value', 'Interpreter', 'latex')
 box off 
 grid on 
-ylim([1 3])
+ylim([0 10])
 
 set(gca,'fontname','times')
 
@@ -356,26 +369,26 @@ clear DiffFromConsensus
 for time=1:size(Xsave,4)
     for k=1:size(Xsave,3) 
         for entire=1:size(Xsave,1)
-            DiffFromConsensus(k,time)=abs(Xsave(entire,1,k,time)-Xsave(entire,2,k,time))+abs(Xsave(entire,1,k,time)-Xsave(entire,3,k,time))+abs(Xsave(entire,2,k,time)-Xsave(entire,3,k,time));
+            %DiffFromConsensus(k,time)=abs(Xsave(entire,1,k,time)-Xsave(entire,2,k,time))+abs(Xsave(entire,1,k,time)-Xsave(entire,3,k,time))+abs(Xsave(entire,2,k,time)-Xsave(entire,3,k,time));
             %DiffFromConsensus(k,time)=max(max(abs(Xsave(entire,1,k,time)-Xsave(entire,2,k,time)),abs(Xsave(entire,1,k,time)-Xsave(entire,3,k,time))),abs(Xsave(entire,2,k,time)-Xsave(entire,3,k,time)));
-            % if mod(entire, 2) == 1
-            %     %The number is odd use first entire 
-            %     %DiffFromConsensus(entire,k,time)=abs(Xsave(entire,1,k,time)-Xsave(entire,2,k,time))+abs(Xsave(entire,1,k,time)-Xsave(entire,3,k,time));
-            %     DiffFromConsensus(entire,k,time)=(Xsave(entire,1,k,time)-Xsave(entire,3,k,time));
-            % else
-            %     %The number is not odd use second entire
-            %     %DiffFromConsensus(entire,k,time)=abs(Xsave(entire,2,k,time)-Xsave(entire,1,k,time))+abs(Xsave(entire,2,k,time)-Xsave(entire,3,k,time));
-            %     DiffFromConsensus(entire,k,time)=(Xsave(entire,2,k,time)-Xsave(entire,1,k,time));
-            % end
+            if mod(entire, 2) == 1
+                %The number is odd use first entire 
+                %DiffFromConsensus(entire,k,time)=abs(Xsave(entire,1,k,time)-Xsave(entire,2,k,time))+abs(Xsave(entire,1,k,time)-Xsave(entire,3,k,time));
+                DiffFromConsensus(entire,k,time)=(Xsave(entire,1,k,time)-Xsave(entire,3,k,time));
+            else
+                %The number is not odd use second entire
+                %DiffFromConsensus(entire,k,time)=abs(Xsave(entire,2,k,time)-Xsave(entire,1,k,time))+abs(Xsave(entire,2,k,time)-Xsave(entire,3,k,time));
+                DiffFromConsensus(entire,k,time)=(Xsave(entire,2,k,time)-Xsave(entire,1,k,time));
+            end
         end 
-        meanDiffFromConsensus(k,time)=sum(DiffFromConsensus(k,time))/((c.Nu+1)*c.Nc*3); 
-        %meanDiffFromConsensus(k,time)=sum(DiffFromConsensus(:,k,time))*600/3600*1000;
+        %meanDiffFromConsensus(k,time)=sum(DiffFromConsensus(k,time))/((c.Nu+1)*c.Nc*3); 
+        meanDiffFromConsensus(k,time)=sum(DiffFromConsensus(:,k,time))*600/3600*1000;
 
     end 
     time
 end 
 
-%% Making a plot on the average disargment from consensus 
+%% Making a plot on te average disargment from consensus 
 f=figure
 plot(meanDiffFromConsensus) 
 xlabel('Iterations')
@@ -388,40 +401,13 @@ box on
 hold on 
 plot(meanDiffFromConsensus)
 hold off 
-xlim([100 200])
+xlim([100 300])
 grid 
-%exportgraphics(f,'Plots/Mean_abs_diff_from_consensus.pdf','ContentType','image')
+%exportgraphics(f,'Plots/Mean_abs_diff_from_consensus.pdf')
 
 %exportgraphics(gcf,'Plots/Mean_abs_diff_from_consensus.pdf', 'ContentType', 'vector')
-%% Plotting the Volume for each of the stakeholders 
-time=1; 
-iterationsNumber=200; 
+%%
 
-[consumptionPred,consumptionActual(time,:)] = consumption(time*c.ts);
-%Moving the predicted consumption to a struct for each use to functions
-c.d=consumptionPred;
 
-%Determing the volume for each, of the 3 stakeholders 
-c.V=0.0560; 
-
-Vx1=ModelPredicted(c.V,Xsave(:,1,iterationsNumber,time),c.d);
-Vx2=ModelPredicted(c.V,Xsave(:,2,iterationsNumber,time),c.d);
-Vx3=ModelPredicted(c.V,Xsave(:,3,iterationsNumber,time),c.d);
-
-f=figure 
-hold on 
-    plot(Vx1)
-    plot(Vx2)
-    plot(Vx3)
-    yline(c.Vmin)
-    yline(c.Vmax)
-hold off
-grid 
-legend('Pump 1','Pump 2','Water Tower','Constraints') 
-ylabel('Water volume [m^{3}]') 
-xlabel('Hours [h_a]')
-set(gca,'fontname','times')
-
-%exportgraphics(f,'Plots/Prediction_each_stakeholder_changing_rho_end_the_end.pdf','ContentType','image') 
 
 
