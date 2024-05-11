@@ -59,7 +59,7 @@ c.rho=1;%
 varying_rho=true; 
 
 %Values for varying rho 
-mu=5;  
+mu=1;  
 tauIncr=1.5; 
 tauDecr=1.5; 
 
@@ -97,7 +97,7 @@ Vconsensus(1,1)=c.V;
 %% Going though x hours of simulation 
 tic
 
-for time=1:hoursToSim
+for time=918:918%time=1:hoursToSim
  %Getting new electricy price and consumption new values with regard to demand and eletricity prices  
 [c.Je] = ElectrictyPrices(time*c.ts); 
 [consumptionPred,consumptionActual(time,:)] = consumption(time*c.ts);
