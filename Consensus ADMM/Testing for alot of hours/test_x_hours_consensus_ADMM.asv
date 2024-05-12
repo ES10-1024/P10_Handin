@@ -394,7 +394,7 @@ grid
 
 %exportgraphics(gcf,'Plots/Mean_abs_diff_from_consensus.pdf', 'ContentType', 'vector')
 %% Plotting the Volume for each of the stakeholders 
-time=757; 
+time=1; 
 iterationsNumber=200; 
 
 [consumptionPred,consumptionActual(time,:)] = consumption(time*c.ts);
@@ -440,14 +440,8 @@ for time=1:size(procentDifference,2)
         Vx3(:,time)=ModelPredicted(c.V,Xsave(:,3,iterationsNumber,time),c.d);
         
         %Determing difference: 
-        Diff1(:,time)=Vx1(:,time)-Vx2(:,time); 
-        Diff2(:,time)=Vx1(:,time)- Vx3(:,time);
-        Diff3(:,time)=Vx2(:,time)-Vx3(:,time); 
-
-        maxDiff(:,time)=max(max(Diff1(:,time),Diff2(:,time)),Diff3(:,time));
+        Diff1=Vx1(:,time)-
 
 end 
-
-plot(maxDiff(end,:)*1000)
 
 
