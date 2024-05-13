@@ -313,13 +313,13 @@ plot(procentDifference)
 hold off 
 ytickformat('%g%%');
 xlim([50 200]) 
-ylim([-0.05 0.2])
+ylim([-1 1])
 grid 
 
 
 
 
-exportgraphics(f,'Plots/percentage_diff_1000_hr_varying_rho_first_10_el_scaled_K=900_changing_rho_end_the_end.pdf')
+%exportgraphics(f,'Plots/percentage_diff_1000_hr_varying_rho_first_10_el_scaled_K=900_changing_rho_end_the_end.pdf')
 %% Making a zoomed in version of the procentwise differencing between the global cost value and the consensus cost value
 f=figure
 hold on 
@@ -394,7 +394,8 @@ grid
 
 %exportgraphics(gcf,'Plots/Mean_abs_diff_from_consensus.pdf', 'ContentType', 'vector')
 %% Plotting the Volume for each of the stakeholders 
-time=757; 
+time=1; %time=757; 
+
 iterationsNumber=200; 
 
 [consumptionPred,consumptionActual(time,:)] = consumption(time*c.ts);
@@ -422,11 +423,11 @@ ylabel('Water volume [m^{3}]')
 xlabel('Hours [h_a]')
 set(gca,'fontname','times')
 
-%exportgraphics(f,'Plots/Prediction_each_stakeholder_changing_rho_end_the_end.pdf','ContentType','image') 
+%exportgraphics(f,'Plots/Prediction_each_stakeholder.pdf','ContentType','image') 
 
 
 %% 
-iterationsNumber=100; 
+iterationsNumber=125; 
 for time=1:size(procentDifference,2) 
    [consumptionPred,consumptionActual(time,:)] = consumption(time*c.ts);
         %Moving the predicted consumption to a struct for each use to functions
@@ -440,14 +441,60 @@ for time=1:size(procentDifference,2)
         Vx3(:,time)=ModelPredicted(c.V,Xsave(:,3,iterationsNumber,time),c.d);
         
         %Determing difference: 
-        Diff1(:,time)=Vx1(:,time)-Vx2(:,time); 
-        Diff2(:,time)=Vx1(:,time)- Vx3(:,time);
-        Diff3(:,time)=Vx2(:,time)-Vx3(:,time); 
+        Diff1(:,time)=abs(Vx1(:,time)-Vx2(:,time)); 
+        Diff2(:,time)=abs(Vx1(:,time)- Vx3(:,time));
+        Diff3(:,time)=abs(Vx2(:,time)-Vx3(:,time)); 
 
         maxDiff(:,time)=max(max(Diff1(:,time),Diff2(:,time)),Diff3(:,time));
 
 end 
 
 plot(maxDiff(end,:)*1000)
+
+
+%% Plotting residuals, 
+%First determine the residuals: 
+c.rho=1;
+for time=1:size(Xsave,4)
+    for k=1:size(Xsave,3) 
+         %Determine the mean value of x/mass flos 
+        xBar(:,k,time)=mean(Xsave(:,:,k,time),2); 
+
+  
+        r(k,time)=norm(Xsave(:,1,k,time)-xBar(:,k,time))+norm(Xsave(:,2,k,time)-xBar(:,k,time))+norm(Xsave(:,3,k,time)-xBar(:,k,time)); 
+      
+        r(k,time)=sqrt(r(k,time)); 
+        %determine the dual residual 
+        if k==1
+            s(k,time)=sqrt((c.Nu+1)*c.rho^2*norm(xBar(:,k,time))^2);
+        else
+            s(k,time)=sqrt((c.Nu+1)*c.rho^2*norm(xBar(:,k,time)-xBar(:,k-1,time))^2);
+        end 
+        
+        if k<=10 
+            c.rho=saveRho(k,time); 
+        end 
+
+    end 
+end 
+
+%% 
+f=figure 
+%subplot(2,1,1)
+plot(r) 
+ylabel('Primal residual') 
+ylim([0 0.15])
+grid  
+set(gca,'fontname','times')
+xlabel('Iterations')
+
+% subplot(2,1,2)  
+% plot(s)
+% ylabel('Dual residual') 
+% grid 
+% xlabel('Iterations')
+% ylim([0 0.001])
+% set(gca,'fontname','times')
+exportgraphics(f,'Plots/primal_dual_residual_varying.pdf', 'ContentType', 'image')
 
 
