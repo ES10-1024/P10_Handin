@@ -45,7 +45,7 @@ constants.rf1=0.35*10^5;
 constants.rf2=0.42*10^5;
 
 %Defining ressistance after 
-constants.rfTogether =0.29*10^5; 
+constants.rfTogether = 0.29*10^5; 
 
 % Defining pipe elevation In meters
 constants.z1=2; 
