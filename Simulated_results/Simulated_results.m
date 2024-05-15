@@ -13,7 +13,7 @@ addpath("..\Consensus ADMM\Simulink implementing\")
 addpath("..\Consensus ADMM\Simulink implementing\Functions\")
 addpath("..\Consensus ADMM\Simulink implementing\Subsystem Reference\")
 addpath("..\Shamirs Secret Sharing\Functions\")
-%c=scaled_standard_constants; 
+c=scaled_standard_constants; 
 %% Define simulation time 
 simHour=250 ; 
 simTime=simHour/c.AccTime*3600; 
@@ -164,7 +164,7 @@ xlabel('Scaled hours')
 ylabel('Pro diff el bill')
 
 set(gca,'fontname','times')
-%exportgraphics(f,'consensus_vs_global_simulated.pdf')
+exportgraphics(f,'consensus_vs_global_simulated.pdf','ContentType','vector')
 
 %ylim([-1.5 0.5])
 
@@ -177,7 +177,7 @@ elProDiff=(consensusCon.Bill(end,1)-globalCon.Bill(end,1))/globalCon.Bill(end,1)
 disp("Procent")
 
 %% 
-f = figure;
+f = figure('Position', [100, 100, 800, 400]);  % Adjust position and size as needed
 
 % Summed mass flows
 subplot(3,1,1)

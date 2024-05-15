@@ -170,12 +170,13 @@ end
 for k=1:IterationsNumber
 
     %Each agent solver their own optimization problem: 
-    parfor(i=1:c.Nu+1)
-        x(:,i) = u_consensus_fmincon(lambda(:,i),z(:,k),c,i,x(:,i),scaledCostfunction);
+    for(i=1:c.Nu+1)
+        x(:,i) = u_consensus_casdi(lambda(:,i),z(:,k),c,i,x(:,i),scaledCostfunction);
     end
 
     %Updating z/updating consensus parameter 
-    z_tilde(:,k) = sum(x,2)/(c.Nu+1) + 1/(c.rho*(c.Nu+1))*sum(lambda,2);
+    z_tilde(:,k) = x(:,1) + 1/(c.rho) * lambda(:,1) + x(:,2) + 1/(c.rho)*lambda(:,2) + x(:,3) + 1/(c.rho) * lambda(:,3);
+    z_tilde(:,k) = z_tilde(:,k)/(c.Nu+1);
     if underrelaxation==true 
         z(:,k+1) = z(:,k) - 1/(c.Nu+1+1)*(z(:,k)-z_tilde(:,k));
     else
@@ -218,11 +219,9 @@ for k=1:IterationsNumber
     costDifference(k,time)=costConsensus(k,time)-costGlobal(:,time); 
     
     %Varying rho if desired: 
-    if varying_rho==true k <= c.varying_rho_iterations_numbers
-        r=0;
-        s=0; 
+    if varying_rho==true && k <= c.varying_rho_iterations_numbers
         %Determine the mean value of x/mass flos 
-        xBar(:,k)=sum(x,2)/(c.Nu+1); 
+        xBar(:,k)=(x(:,1)+x(:,2)+x(:,3))/(c.Nu+1); 
 
         %determine the primal residual 
         r=sqrt(norm(x(:,1)-xBar(:,k))^2+norm(x(:,2)-xBar(:,k))^2+norm(x(:,3)-xBar(:,k))^2);
@@ -230,7 +229,7 @@ for k=1:IterationsNumber
         if k==1
             s=sqrt((c.Nu+1)*c.rho^2*norm(xBar(:,k))^2);
         else
-            s=sqrt((c.Nu+1)*c.rho^2*norm(xBar(:,k)-xBar(:,k-1))^2);
+            s=sqrt((c.Nu+1)*c.rho^2*norm(xBar(:,k)-xBar(:,k-1),2)^2);
         end 
         %Updating rho if neccesary
          if r >mu*s 

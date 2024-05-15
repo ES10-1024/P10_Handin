@@ -124,10 +124,7 @@ procentDifferenceShort=zeros(size(procentDifference));
 for index=1:size(procentDifference,2) 
     procentDifferenceShort(:,index)=[procentDifference(1:first_occurrence_row(index),index);zeros(200-first_occurrence_row(index),1)];
     epsilonPriEndValue(:,index)=epsilonPri(first_occurrence_row(index),index);
-    epsilonDualEndValue(:,index)=epsilonDual(first_occurrence_row(index),index);
 end 
-mean(epsilonPriEndValue)
-mean(epsilonDualEndValue)
 %% 
 f=figure
 ax=axes

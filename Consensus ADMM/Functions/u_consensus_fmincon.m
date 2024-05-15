@@ -22,6 +22,7 @@ total=c.Nc*c.Nu;
  %Setting the solver to use the Alorigthm sqp 
  options = optimoptions(@fmincon,'Algorithm','sqp');
 
+ c.rho
 
 
 %% Water level in water tower (need for the cost functions)
@@ -169,7 +170,7 @@ end
 
     %Defining the part of the cost function which is in regard to the ADMM consensus
     %algortime 
-    J_con_z = @(u) lambda'*(u-z)+c.rho/2*((u-z)'*(u-z));
+    J_con_z = @(u) lambda'*(u-z)+c.rho/2*(transpose(u-z)*(u-z));
   
     
     %Making the entire cost function
