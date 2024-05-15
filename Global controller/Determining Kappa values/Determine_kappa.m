@@ -14,7 +14,7 @@ scaledCostfunction=true;
 scaledEletricityPrice=true;
 
 %Hours it is desired to simulate: 
-simHour=100; 
+simHour=1000; 
 
 
 %% Loading in standard Constants and adding a few paths 
@@ -124,11 +124,13 @@ f=figure
 hold on 
 stairs(Vglobal(1:end-1))
 stairs(VglobalPredictedGlobal(end,:))
+yline(0.028)
 hold off 
 xlabel('Time [hr]','FontSize',FrontSize)
 ylabel('Water Volume [m^{3}]','FontSize',FrontSize)
 grid on
 legend('Now','24 hours')
+
 
 %exportgraphics(f,'Plots/two_plots_scaled_k=700.pdf')
  

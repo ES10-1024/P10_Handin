@@ -12,7 +12,7 @@ addpath("..\..\")
 
 addpath("Plots\")
 
-%c=scaled_standard_constants; 
+c=scaled_standard_constants; 
 
 
 %% Making A and v matrices for the optimization problem
@@ -48,7 +48,7 @@ clear i
 
 %% Initialization
 %Amount of hour that should be simulated: 
-hoursToSim=1; 
+hoursToSim=10; 
 %Number of iterations that the consensus ADMM should go though: 
 IterationsNumber=200; 
 
@@ -59,7 +59,7 @@ c.rho=1;%
 varying_rho=true; 
 
 %Values for varying rho 
-mu=1;  
+mu=5;  
 tauIncr=1.5; 
 tauDecr=1.5; 
 
@@ -87,6 +87,7 @@ lambda = zeros(c.Nc*c.Nu,c.Nu+1);
 x = zeros(c.Nc*c.Nu,c.Nu+1);
 inputUsed=zeros(c.Nc*c.Nu,24); 
 
+c.V = 200/1000 * c.At; 
 
 
 %% Setting water volume for the two optimization problems 
@@ -217,17 +218,14 @@ for k=1:IterationsNumber
     costDifference(k,time)=costConsensus(k,time)-costGlobal(:,time); 
     
     %Varying rho if desired: 
-    if varying_rho==true %&& k<= c.varying_rho_iterations_numbers
+    if varying_rho==true k <= c.varying_rho_iterations_numbers
         r=0;
         s=0; 
         %Determine the mean value of x/mass flos 
         xBar(:,k)=sum(x,2)/(c.Nu+1); 
 
         %determine the primal residual 
-        for index=1:c.Nu+1 
-            r=norm(x(:,index)-xBar(:,k))+r; 
-        end 
-        r=sqrt(r); 
+        r=sqrt(norm(x(:,1)-xBar(:,k))^2+norm(x(:,2)-xBar(:,k))^2+norm(x(:,3)-xBar(:,k))^2);
         %determine the dual residual 
         if k==1
             s=sqrt((c.Nu+1)*c.rho^2*norm(xBar(:,k))^2);
@@ -495,6 +493,6 @@ xlabel('Iterations')
 % xlabel('Iterations')
 % ylim([0 0.001])
 % set(gca,'fontname','times')
-exportgraphics(f,'Plots/primal_dual_residual_varying.pdf', 'ContentType', 'image')
+%exportgraphics(f,'Plots/primal_dual_residual_varying.pdf', 'ContentType', 'image')
 
 
