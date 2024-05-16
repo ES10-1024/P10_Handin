@@ -48,7 +48,7 @@ clear i
 
 %% Initialization
 %Amount of hour that should be simulated: 
-hoursToSim=10; 
+hoursToSim=1; 
 %Number of iterations that the consensus ADMM should go though: 
 IterationsNumber=200; 
 
@@ -170,7 +170,7 @@ end
 for k=1:IterationsNumber
 
     %Each agent solver their own optimization problem: 
-    for(i=1:c.Nu+1)
+    parfor(i=1:c.Nu+1)
         x(:,i) = u_consensus_casdi(lambda(:,i),z(:,k),c,i,x(:,i),scaledCostfunction);
     end
 
