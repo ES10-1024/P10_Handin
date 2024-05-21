@@ -22,7 +22,7 @@ addpath("Subsystem Reference\")
 %% Adding path and standard values
 c=scaled_standard_constants; 
 %% Define the amount of scaled hours it is desired to simulate for: 
-simHour=1; %48; 
+simHour=2; %48; 
 
 %Making calculatation to get it to fit with the sacled time and make it
 %such matlab likes it 
