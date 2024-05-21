@@ -81,4 +81,7 @@ for time=startIndex:size(RefCon.simData.logsout{11}.Values.Time,1)
         index=index+1; 
 end 
 
+save('Reference_controller.mat')
+
+ 
 

@@ -229,9 +229,8 @@ for k=1:IterationsNumber
         xBar(:,k)=sum(x,2)/(c.Nu+1); 
 
         %determine the primal residual 
-        for index=1:c.Nu+1 
-            r=norm(x(:,index)-xBar(:,k))+r; 
-        end 
+        r=sqrt(norm(x(:,1)-xBar(:,k))^2+norm(x(:,2)-xBar(:,k))^2+norm(x(:,3)-xBar(:,k))^2);
+
         r=sqrt(r); 
         
         %determine the dual residual 

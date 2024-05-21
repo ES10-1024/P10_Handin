@@ -13,9 +13,10 @@ addpath("..\Consensus ADMM\Simulink implementing\")
 addpath("..\Consensus ADMM\Simulink implementing\Functions\")
 addpath("..\Consensus ADMM\Simulink implementing\Subsystem Reference\")
 addpath("..\Shamirs Secret Sharing\Functions\")
+addpath("..\")
 %c=scaled_standard_constants; 
 %% Define simulation time 
-simHour=250 ; 
+simHour=40; 
 simTime=simHour/c.AccTime*3600; 
 c.Tsim=num2str(simTime); 
 %% Simulating the global controller
@@ -23,7 +24,7 @@ globalCon.simData=sim('GlobalMPC.slx',"StartTime",'0',"StopTime",c.Tsim,'FixedSt
 %% Simulating the consensus controller 
 consensusCon.simData=sim('ADMM_consensus.slx',"StartTime",'0',"StopTime",c.Tsim,'FixedStep','200');
 %% 
-save('Simulated_results_fmincon240hr.mat')
+save('Simulated_results_casadi100hr.mat')
 
 %% Picking out a few things which is needed for the comparision: 
 %Summing the mass flows at each time step  [m^3/h]
@@ -164,7 +165,7 @@ xlabel('Scaled hours')
 ylabel('Pro diff el bill')
 
 set(gca,'fontname','times')
-%exportgraphics(f,'consensus_vs_global_simulated.pdf')
+exportgraphics(f,'consensus_vs_global_simulated.pdf','ContentType','vector')
 
 %ylim([-1.5 0.5])
 
@@ -177,17 +178,19 @@ elProDiff=(consensusCon.Bill(end,1)-globalCon.Bill(end,1))/globalCon.Bill(end,1)
 disp("Procent")
 
 %% 
-f = figure;
+f = figure('Position', [100, 100, 800, 400]);  % Adjust position and size as needed
 
 % Summed mass flows
 subplot(3,1,1)
 hold on
 ylabel('Global $\sum q_i$ [m$^{3}$/h]', 'Interpreter', 'latex');
 yyaxis left 
+ylim([0 0.5])
 stairs(globalCon.summedMassflow) 
 yyaxis right 
 stairs(consensusCon.summedMassflow)
 ylabel('ADMM $\sum q_i$ [m$^{3}$/h]', 'Interpreter', 'latex');
+ylim([0 0.5])
 hold off 
 grid  on 
 set(gca,'fontname','times')

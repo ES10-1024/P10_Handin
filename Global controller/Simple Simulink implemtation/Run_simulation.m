@@ -6,12 +6,12 @@ clc
 clear
 close all
 %% Adding path and standard values
-addpath("Global controller\Simple Simulink implemtation\Functions\")
+addpath("Functions\")
 addpath("..\Subsystem Reference\")
 addpath("..\..\")
 c=scaled_standard_constants; 
 %% Define the amount of scaled hours it is desired to simulate for: 
-simHour=500; 
+simHour=72; 
 
 %Making calculatation to get it to fit with the sacled time and make it
 %such matlab likes it 
@@ -44,16 +44,20 @@ consumptionPred=squeeze(simData.logsout{4}.Values.Data(1,1,2:end));
 
 Volume=simData.logsout{3}.Values.Data/1000*c.At; 
 
+%% Loading in reference controller water volume 
+addpath("..\..\Reference controller\")
+refCon=load('Reference_controller.mat') 
+
 %% Making the plot 
-f=figure
+f = figure('Position', [100, 100, 800, 400]);  % Adjust position and size as needed
 % Electricity prices and summed mass flow for each time stamp 
 subplot(3,1,1)
 hold on
 yyaxis left
-ylabel('Summed pump mass flow [m^{3}/h]' )
+ylabel('$\sum q_i$ [m$^{3}$/h]', 'Interpreter', 'latex');
 stairs(summedMassflow) 
 yyaxis right 
-ylabel('Electricity Pric [Euro/kWh]') 
+ylabel('Price [Euro/kWh]', 'Interpreter', 'latex');
 stairs(ElPrices)
 xlabel('Time [h_a]') 
 grid 
@@ -65,10 +69,11 @@ set(gca,'fontname','times')
 subplot(3,1,2) 
 hold on 
 plot(Volume)
+plot(refCon.RefCon.simData.logsout{11}.Values.Time(refCon.startIndex:end)*6/3600,refCon.RefCon.simData.logsout{11}.Values.Data(refCon.startIndex:end)/1000*c.At,'color','green')
 yline(c.Vmax)
 yline(c.Vmin)
 hold off 
-legend('Volume','Constraints')
+legend('Global','Reference','Constraints')
 ylabel('Volume [m^{3}]') 
 xlim([0 72])
 grid 
@@ -88,9 +93,15 @@ xlim([0 72])
 ylabel('Mass flow [m^{3}/h]' )
 xlabel('Time [h_a]') 
 set(gca,'fontname','times')
+% Adjust position to make it wider
+
+%a = annotation('rectangle',[0 0 0 0],'Color','w');
+
+exportgraphics(f,'global_controller_scaled_with_disturbance_with_Kappa.pdf','ContentType','vector')
+
+%delete(a)
+ 
 
 
 
-
-exportgraphics(f,'global_controller_scaled_with_disturbance_with_Kappa.pdf')
 

@@ -45,7 +45,7 @@ constants.rf1=0.35*10^5;
 constants.rf2=0.42*10^5;
 
 %Defining ressistance after 
-constants.rfTogether =0.29*10^5; 
+constants.rfTogether = 0.29*10^5; 
 
 % Defining pipe elevation In meters
 constants.z1=2; 
@@ -96,7 +96,7 @@ constants.RhoEnd=500;
 constants.iterationRhoChange=30; 
 %% Define if it is allowed to vary rho if it is the case how many iterations 
 constants.varying_rho=true; 
-constants.varying_rho_iterations_numbers=20; 
+constants.varying_rho_iterations_numbers=10; 
 constants.mu=5;  
 constants.tauIncr=1.5;
 constants.tauDecr=1.5;
