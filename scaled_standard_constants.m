@@ -58,7 +58,7 @@ constants.Nd=1;
 
 %% Initial values
 %Inital volumen [m^c]
-constants.V=56/1000; %0.085;
+constants.V = 0.1316;%56/1000; %0.085;
 
 
 %% MPC tuning parameter

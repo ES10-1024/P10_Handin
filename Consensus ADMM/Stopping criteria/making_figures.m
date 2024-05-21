@@ -9,7 +9,7 @@ clc
 addpath("C:\Users\is123\Documents\GitHub\P10_Handin\Consensus ADMM\Saved workspaces V4")
 
 fixed=load("Stopping_own.mat");
-varaible=load("stopping_criteria_boyd.mat");
+varaible=load("stopping_criteria_boyd_mu5_tau1d5.mat");
 
 fixed125=load("1000hr_mu2d5_tau1d5_rho_multiplied_500_at_30_V2"); 
 
@@ -38,7 +38,7 @@ ylabel('Iterations number')
 set(gca,'fontname','times')
 hold off 
 grid 
-legend('Fixed','Varying')
+legend('Constant','Varying')
 xlim([200 400])
 
 
@@ -60,8 +60,9 @@ ytickformat(ax, 'percentage');
 ax.YGrid = 'on'
 %ytickformat(ax, '%g%%');
 ax.XGrid = 'on'
-legend('Fixed','Varying','125')
+legend('Constant','Varying','125')
 xlim([200 400])
+ylim([-0.01 0.25])
 
 exportgraphics(f,'fixed_vs_varying_performance_short.pdf','ContentType','vector')
 
