@@ -12,7 +12,7 @@ addpath("..\..\")
 
 addpath("Plots\")
 
-c=scaled_standard_constants; 
+%c=scaled_standard_constants; 
 
 
 %% Making A and v matrices for the optimization problem
@@ -310,13 +310,13 @@ plot(procentDifference)
 hold off 
 ytickformat('%g%%');
 xlim([50 200]) 
-ylim([-1 1])
+ylim([-0.05 0.5])
 grid 
 
 
 
 
-%exportgraphics(f,'Plots/percentage_diff_1000_hr_varying_rho_first_10_el_scaled_K=900_changing_rho_end_the_end.pdf')
+exportgraphics(f,'Plots/percentage_diff_1000_hr_varying_rho_first_10_el_scaled_K=900_changing_rho_end_the_end.pdf')
 %% Making a zoomed in version of the procentwise differencing between the global cost value and the consensus cost value
 f=figure
 hold on 
@@ -341,11 +341,11 @@ xlabel('Hour [h_a]')
 ylabel('$\rho$ value', 'Interpreter', 'latex')
 box off 
 grid on 
-ylim([1 3])
+ylim([1 2])
 
 set(gca,'fontname','times')
 
-%exportgraphics(gcf,'Plots/rho_value_10_iterations.pdf','ContentType','image')
+exportgraphics(gcf,'Plots/rho_value_10_iterations.pdf','ContentType','image')
 
 %% Determining the average disargement from consensus 
 clear meanDiffFromConsensus 
@@ -420,7 +420,7 @@ ylabel('Water volume [m^{3}]')
 xlabel('Hours [h_a]')
 set(gca,'fontname','times')
 
-%exportgraphics(f,'Plots/Prediction_each_stakeholder.pdf','ContentType','image') 
+exportgraphics(f,'Plots/Prediction_each_stakeholder.pdf','ContentType','image') 
 
 
 %% 
@@ -480,7 +480,7 @@ f=figure
 %subplot(2,1,1)
 plot(r) 
 ylabel('Primal residual') 
-ylim([0 0.15])
+ylim([0 0.3])
 grid  
 set(gca,'fontname','times')
 xlabel('Iterations')
@@ -492,6 +492,6 @@ xlabel('Iterations')
 % xlabel('Iterations')
 % ylim([0 0.001])
 % set(gca,'fontname','times')
-%exportgraphics(f,'Plots/primal_dual_residual_varying.pdf', 'ContentType', 'image')
+exportgraphics(f,'Plots/primal_dual_residual_varying.pdf', 'ContentType', 'image')
 
 

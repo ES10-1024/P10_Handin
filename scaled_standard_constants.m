@@ -58,7 +58,7 @@ constants.Nd=1;
 
 %% Initial values
 %Inital volumen [m^c]
-constants.V=56/1000; %0.085;
+constants.V = 0.1316;%56/1000; %0.085;
 
 
 %% MPC tuning parameter
@@ -87,7 +87,7 @@ constants.disturbance=true;
 %% If the electricity price should be scaled 
 constants.scaledEletricityPrice=true;
 %% If SMPC should be used for consensus ADMM 
-constants.UseSMPC=true; 
+constants.UseSMPC=false; 
 %% If rho should changes its value in the end to ensure consensus 
 constants.changeRhoEnd=true;
 %The value rho should have in the end 
@@ -105,6 +105,9 @@ constants.epsilonPri=0.07; %0.90; %1e-2;
 constants.epsilonDual=0.06; %0.90; %1e-2;
 constants.epsilonRel=10^(-3); 
 constants.epsilonAbs=0.05; 
+constants.maxIterations=500; 
+constants.stopCriterionStart=35; 
+constants.betweenStopCheck=5;
 %% Scaling for conditioning 
 constants.condScaling=10000;
 %% SMPC varaibles 
