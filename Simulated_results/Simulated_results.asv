@@ -54,8 +54,6 @@ consumptionActual=globalCon.simData.logsout{5}.Values.Data(2:end,1);
 
 %Taking out the predicted consumption  
 globalCon.consumptionPred=squeeze(globalCon.simData.logsout{4}.Values.Data(1,1,2:end)); 
-globalCon.consumptionNoise=globalCon.simData.logsout{5}.Values.Data(2:end,1); 
-
 consensusCon.consumptionPred=squeeze(consensusCon.simData.logsout{6}.Values.Data(1,1,2:end));
 
 %Getting the volume [m^3]
@@ -275,38 +273,17 @@ xlabel('Time [h_a]')
 
 %Previous and future comsumption 
 nexttile 
-hold on 
 x=0:80 
-%Plotting colors in the orden it is desired 
-
-stairs(x,[globalCon.consumptionPred(1:80);globalCon.consumptionPred(80)],'Color','#EDB120','LineWidth',0.05)
-stairs(x,[globalCon.consumptionPred(1:80);globalCon.consumptionPred(80)],'Color','#0072BD','LineWidth',0.05)
-
-stairs(x,[globalCon.consumptionPred(1:80);globalCon.consumptionPred(80)],'Color','#77AC30','LineWidth',0.05)
-stairs(x,[globalCon.consumptionPred(1:80);globalCon.consumptionPred(80)],'Color','#D95319','LineWidth',0.05)
-
-stairs(x,[globalCon.consumptionPred(1:80);globalCon.consumptionPred(80)],'Color','#4DBEEE','LineWidth',0.05)
-stairs(x,[globalCon.consumptionPred(1:80);globalCon.consumptionPred(80)],'Color','#A2142F','LineWidth',0.05)
-
-
-x=0:80 
-stairs(x,[globalCon.consumptionPred(1:80);globalCon.consumptionPred(80)],'color',"#EDB120") %#EDB120
+stairs(x,[globalCon.consumptionPred;consumptionPred(end)],'color',"#EDB120") %#EDB120
 x=80:80+24-1;
-stairs(x,globalCon.simData.logsout{4}.Values.Data(:,hourUsed),'color','#EDB120')
+stairs(x,globalCon.simData.logsout{4}.Values.Data(:,end),'color','#EDB120')
+x=0:size(consumptionPred,1);
 
-x=0:80 
-stairs(x,[globalCon.consumptionNoise(1:80);globalCon.consumptionNoise(80)],'color','#77AC30')
-grid 
-hold off
-xlim([0 104])
 
-    ylabel('Consumption [m^3/h]')
-    xlabel('Time [h_a]')
-set(gca,'fontname','times')
+x=0:size(consumptionPred,1);
+stairs(x,[consumptionNoise;consumptionNoise(end)],'color','#77AC30')
 
-lgd = legend(" Prediction", "Global controller", "Commanded"," Distributed controller",'Pred global','Pred distributed', 'Orientation','Horizontal')
- 
-lgd.Layout.Tile = 'south';
+
 
 exportgraphics(f,'Sim_results.pdf','ContentType','vector') 
 

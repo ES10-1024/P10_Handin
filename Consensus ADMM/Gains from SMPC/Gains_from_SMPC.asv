@@ -15,14 +15,14 @@ load('benfits_gained_smpc.mat')
 index=1; 
 for i=1:20
     if mod(i,2)==1
-        ownShare(index,1) = ADMM_2.Own_shares(1,i); 
+        ownShare(index,1) = ADMM_1.Own_shares(1,i); 
         index=index+1; 
     end 
 end 
 
 %picking out the remaining, 90 samples: 
-ownShare=[ownShare;ADMM_2.Own_shares(1,21:110)'];
+ownShare=[ownShare;ADMM_1.Own_shares(1,21:100)];
 
-
-%%
-plot(ownShare,'*')
+% for i=1:100 
+%   
+% end 

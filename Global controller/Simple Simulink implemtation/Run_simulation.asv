@@ -51,7 +51,7 @@ consumptionPred=squeeze(simData.logsout{4}.Values.Data(1,1,2:end));
 Volume=simData.logsout{3}.Values.Data/1000*c.At; 
 %% 
 %Getting predicted volumes: 
-VolumePred = ModelPredicted(Volume(end-1),simData.logsout{2}.Values.Data(end,:)',simData.logsout{4}.Values.Data(:,:,end));
+VolumePred = ModelPredicted(Volume(end-1),simData.logsout{2}.Values.Data(end,:)',simData.logsout{4}.Values.Data(:,end));
 
 %% Loading in reference controller water volume 
 addpath("..\..\Reference controller\")
@@ -89,7 +89,6 @@ stairs(x,predSummedMassFlows,'color','#EDB120')
     grid on
 xlim([0 104])
 hold off 
-set(gca,'fontname','times')
 
 % Volume in the water tower: 
 nexttile
@@ -111,27 +110,18 @@ set(gca,'fontname','times')
 
 %Predicted consumption and presented consumption
 nexttile
-
-
 hold on 
 x=0:size(consumptionPred,1);
-%Plotting colors in the orden it is desired 
-
-stairs(x,[consumptionPred;consumptionPred(end)],'Color','#EDB120','LineWidth',0.05)
-stairs(x,[consumptionPred;consumptionPred(end)],'Color','#7E2F8E','LineWidth',0.05)
-stairs(x,[consumptionPred;consumptionPred(end)],'Color','#77AC30','LineWidth',0.05)
-stairs(x,[consumptionPred;consumptionPred(end)],'Color','#A2142F','LineWidth',0.05)
-
-
-x=0:size(consumptionPred,1);
-stairs(x,[consumptionPred;consumptionPred(end)],'color',"#EDB120") %#EDB120
+stairs(x,[consumptionPred;consumptionPred(end)],'color',"#77AC30")
 x=80:80+24-1;
 stairs(x,simData.logsout{4}.Values.Data(:,end),'color','#EDB120')
 x=0:size(consumptionPred,1);
+% Needs plot to get all the colors: 
+stairs(x,[consumptionNoise;consumptionNoise(end)],'color','#A2142F')
 
 
 x=0:size(consumptionPred,1);
-stairs(x,[consumptionNoise;consumptionNoise(end)],'color','#77AC30')
+stairs(x,[consumptionNoise;consumptionNoise(end)],'color','#7E2F8E')
 hold off 
 grid 
 %legend('Predicted consumption','Actual consumption')
@@ -141,7 +131,7 @@ xlim([0 104])
     xlabel('Time [h_a]')
 set(gca,'fontname','times')
 
-lgd = legend(" Prediction", "Global controller", "Commanded"," Reference controller", 'Orientation','Horizontal')
+lgd = legend("Commanded", " Prediction", "Reference","Global", 'Orientation','Horizontal')
  
 lgd.Layout.Tile = 'south';
 
