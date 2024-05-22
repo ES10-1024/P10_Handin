@@ -9,9 +9,9 @@ clc
 addpath("C:\Users\is123\Documents\GitHub\P10_Handin\Consensus ADMM\Saved workspaces V4")
 
 fixed=load("Stopping_own.mat");
-varaible=load("stopping_criteria_boyd_mu5_tau1d5.mat");
+varaible=load("stopping_criteria_boyd.mat");
 
-fixed125=load("1000hr_mu2d5_tau1d5_rho_multiplied_500_at_30_V2"); 
+fixed125=load("1000hr_mu5_tau1d5_rho_V32"); 
 
 %% 
 % Loop through each column
@@ -34,15 +34,15 @@ hold on
 stairs(fixed.lastNonZeroIndices)
 stairs(varaible.lastNonZeroIndices)
 xlabel('Hours [h_a]')
-ylabel('Iterations number')
+ylabel('Iterations')
 set(gca,'fontname','times')
 hold off 
 grid 
-legend('Constant','Varying')
-xlim([200 400])
+legend('Constant','Varying','Location','northwest')
+%xlim([200 400])
 
 
-exportgraphics(f,'fixed_vs_varying_iterations_short.pdf','ContentType','vector')
+exportgraphics(f,'fixed_vs_varying_iterations.pdf','ContentType','vector')
 
 %% Plotting performance: 
 f=figure
@@ -60,10 +60,20 @@ ytickformat(ax, 'percentage');
 ax.YGrid = 'on'
 %ytickformat(ax, '%g%%');
 ax.XGrid = 'on'
-legend('Constant','Varying','125')
-xlim([200 400])
+legend('Constant','Varying','125','Location','northwest')
+%xlim([200 400])
 ylim([-0.01 0.25])
 
-exportgraphics(f,'fixed_vs_varying_performance_short.pdf','ContentType','vector')
+exportgraphics(f,'fixed_vs_varying_performance.pdf','ContentType','vector')
+%% Determine the number of iterations 
+for time=1:1000 
+    %First addning those need for varying rho in the start these are always
+    %constant:
+    communicationNumber(time,1)=20; 
+    %Afterwards adding those for each iteration for consensus ADMM: 
+    communicationNumber(time,1)=communicationNumber(time,1)+fixed.lastNonZeroIndices(time); 
+    %Next it is neccesary to determine for the stopping criteria,
+    communicationNumber(time,1)=communicationNumber(time,1)+floor((fixed.lastNonZeroIndices(time)-35)/5)*2+2;
+end 
 
 

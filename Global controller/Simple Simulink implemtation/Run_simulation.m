@@ -11,7 +11,7 @@ addpath("..\Subsystem Reference\")
 addpath("..\..\")
 c=scaled_standard_constants; 
 %% Define the amount of scaled hours it is desired to simulate for: 
-simHour=250; 
+simHour=80; 
 
 %Making calculatation to get it to fit with the sacled time and make it
 %such matlab likes it 
@@ -22,7 +22,7 @@ c.V=465/1000*c.At;
 
 %% Running the simulation 
 simData=sim('GlobalMPC.slx',"StartTime",'0',"StopTime",c.Tsim,'FixedStep','200');
-save('global_controller_465_mm.mat')
+%save('global_controller_465_mm.mat')
 %% Making a plot of the result  
 clf 
 % adding the mass flows for the given time stamp  
@@ -49,16 +49,17 @@ addpath("..\..\Reference controller\")
 refCon=load('Reference_controller.mat') 
 
 %% Making the plot 
+x=0:size(summedMassflow,1)-1;
 f = figure('Position', [100, 100, 800, 400]);  % Adjust position and size as needed
 % Electricity prices and summed mass flow for each time stamp 
 subplot(3,1,1)
 hold on
 yyaxis left
 ylabel('$\sum q_i$ [m$^{3}$/h]', 'Interpreter', 'latex');
-stairs(summedMassflow) 
+stairs(x,summedMassflow) 
 yyaxis right 
 ylabel('Price [Euro/kWh]', 'Interpreter', 'latex');
-stairs(ElPrices)
+stairs(x,ElPrices)
 xlabel('Time [h_a]') 
 grid 
 xlim([0 72])
@@ -68,8 +69,9 @@ set(gca,'fontname','times')
 % Volume in the water tower: 
 subplot(3,1,2) 
 hold on 
-plot(Volume)
-plot(refCon.RefCon.simData.logsout{11}.Values.Time(refCon.startIndex:end)*6/3600,refCon.RefCon.simData.logsout{11}.Values.Data(refCon.startIndex:end)/1000*c.At,'color','green')
+x=0:size(Volume,1)-1;
+plot(x,Volume)
+plot(refCon.RefCon.simData.logsout{11}.Values.Time(refCon.startIndex:end)*6/3600-1,refCon.RefCon.simData.logsout{11}.Values.Data(refCon.startIndex:end)/1000*c.At,'color','#EDB120')
 yline(c.Vmax)
 yline(c.Vmin)
 hold off 
@@ -83,8 +85,9 @@ set(gca,'fontname','times')
 %Predicted consumption and presented consumption
 subplot(3,1,3)
 hold on 
-stairs(consumptionPred)
-stairs(consumptionNoise)
+x=0:size(consumptionPred,1)-1;
+stairs(x,consumptionPred)
+stairs(x,consumptionNoise,'color',"#77AC30")
 hold off 
 grid 
 %legend('Predicted consumption','Actual consumption')
