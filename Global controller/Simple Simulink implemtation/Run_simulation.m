@@ -68,9 +68,9 @@ nexttile
 hold on
     ylabel('Electricity price [EUR/kWh]')
     xlabel('Time [h_a]')
-stairs(x,[ElPrices,ElPrices(end)],'color','#77AC30')
+p1=stairs(x,[ElPrices,ElPrices(end)],'color','#77AC30')
 x=80:80+24-1;
-stairs(x,simData.logsout{6}.Values.Data(:,1,end),'color','#EDB120')
+p2=stairs(x,simData.logsout{6}.Values.Data(:,1,end),'color','#EDB120')
 grid 
 xlim([0 104])
 hold off 
@@ -95,8 +95,8 @@ set(gca,'fontname','times')
 nexttile
 hold on 
 x=0:size(Volume,1)-1;
-plot(x,Volume*1000,'color','#7E2F8E')
-plot(refCon.RefCon.simData.logsout{11}.Values.Time(refCon.startIndex:end)*6/3600-1,refCon.RefCon.simData.logsout{11}.Values.Data(refCon.startIndex:end)/1000*c.At*1000,'color','#A2142F')
+p3=plot(x,Volume*1000,'color','#7E2F8E')
+p4=plot(refCon.RefCon.simData.logsout{11}.Values.Time(refCon.startIndex:end)*6/3600-1,refCon.RefCon.simData.logsout{11}.Values.Data(refCon.startIndex:end)/1000*c.At*1000,'color','#A2142F')
 x=80:80+24-1;
 plot(x,VolumePred*1000)
 yline(c.Vmax*1000)
@@ -117,10 +117,10 @@ hold on
 x=0:size(consumptionPred,1);
 %Plotting colors in the orden it is desired 
 
-stairs(x,[consumptionPred;consumptionPred(end)],'Color','#EDB120','LineWidth',0.05)
-stairs(x,[consumptionPred;consumptionPred(end)],'Color','#7E2F8E','LineWidth',0.05)
-stairs(x,[consumptionPred;consumptionPred(end)],'Color','#77AC30','LineWidth',0.05)
-stairs(x,[consumptionPred;consumptionPred(end)],'Color','#A2142F','LineWidth',0.05)
+% stairs(x,[consumptionPred;consumptionPred(end)],'Color','#EDB120','LineWidth',0.05)
+% stairs(x,[consumptionPred;consumptionPred(end)],'Color','#7E2F8E','LineWidth',0.05)
+% stairs(x,[consumptionPred;consumptionPred(end)],'Color','#77AC30','LineWidth',0.05)
+% stairs(x,[consumptionPred;consumptionPred(end)],'Color','#A2142F','LineWidth',0.05)
 
 
 x=0:size(consumptionPred,1);
@@ -140,8 +140,8 @@ xlim([0 104])
     ylabel('Consumption [m^3/h]')
     xlabel('Time [h_a]')
 set(gca,'fontname','times')
-
-lgd = legend(" Prediction", "Global controller", "Commanded"," Reference controller", 'Orientation','Horizontal')
+h = [p1(1),p2(1),p3(1),p4(1)]; 
+lgd = legend(h," Commanded", "Predictionn", "Global controller"," Reference controller", 'Orientation','Horizontal')
  
 lgd.Layout.Tile = 'south';
 

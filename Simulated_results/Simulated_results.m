@@ -218,9 +218,9 @@ tiledlayout(4,1, "TileSpacing","compact")
 nexttile 
 x=0:80;
 hold on 
-stairs(x,[globalCon.ElPrices(1:80);globalCon.ElPrices(80)],'color','#77AC30')
+p1=stairs(x,[globalCon.ElPrices(1:80);globalCon.ElPrices(80)],'color','#77AC30')
 x=80:80+24-1;
-stairs(x,globalCon.simData.logsout{6}.Values.Data(:,80),'color','#EDB120')
+p2=stairs(x,globalCon.simData.logsout{6}.Values.Data(:,80),'color','#EDB120')
 hold off
 ylabel('Electricity price [EUR/kWh]')
 xlabel('Time [h_a]')
@@ -234,12 +234,12 @@ hold on
 ylim([0 0.5])
 x=0:80;
 %Present
-stairs(x,[globalCon.summedMassflow(1:80);globalCon.summedMassflow(80)],'Color','#0072BD') 
-stairs(x,[consensusCon.summedMassflow(1:80);consensusCon.summedMassflow(80)],'Color','#D95319')
+p3=stairs(x,[globalCon.summedMassflow(1:80);globalCon.summedMassflow(80)],'Color','#0072BD','LineWidth',4) 
+p4=stairs(x,[consensusCon.summedMassflow(1:80);consensusCon.summedMassflow(80)],'Color','#D95319','LineWidth',1)
 x=80:80+24-1;
 %Prediction
-stairs(x,globalCon.predSummedFlow,'Color','#4DBEEE') 
-stairs(x,consensusCon.predSummedFlow,'Color','#A2142F') 
+p5=stairs(x,globalCon.predSummedFlow,'Color','#4DBEEE','LineWidth',4) 
+p6=stairs(x,consensusCon.predSummedFlow,'Color','#A2142F','LineWidth',1) 
 
 ylabel('Sum of flows [m^3/h]')
 xlabel('Time [h_a]')
@@ -255,13 +255,13 @@ nexttile
 hold on 
 %past
 x=0:80;
-plot(x,globalCon.Volume(1:81)*1000,'Color','#0072BD')
+plot(x,globalCon.Volume(1:81)*1000,'Color','#0072BD','LineWidth',4)
 
-plot(x,consensusCon.Volume(1:81)*1000,'Color','#D95319')
+plot(x,consensusCon.Volume(1:81)*1000,'Color','#D95319','LineWidth',1)
 x=80:80+24-1;
 %prediction
-plot(x,globalCon.VolumePred*1000,'Color','#4DBEEE')
-plot(x,consensusCon.VolumePred*1000,'Color','#A2142F')
+plot(x,globalCon.VolumePred*1000,'Color','#4DBEEE','LineWidth',4)
+plot(x,consensusCon.VolumePred*1000,'Color','#A2142F','LineWidth',1)
 
 hold off 
 
@@ -277,16 +277,6 @@ xlabel('Time [h_a]')
 nexttile 
 hold on 
 x=0:80 
-%Plotting colors in the orden it is desired 
-
-stairs(x,[globalCon.consumptionPred(1:80);globalCon.consumptionPred(80)],'Color','#EDB120','LineWidth',0.05)
-stairs(x,[globalCon.consumptionPred(1:80);globalCon.consumptionPred(80)],'Color','#0072BD','LineWidth',0.05)
-
-stairs(x,[globalCon.consumptionPred(1:80);globalCon.consumptionPred(80)],'Color','#77AC30','LineWidth',0.05)
-stairs(x,[globalCon.consumptionPred(1:80);globalCon.consumptionPred(80)],'Color','#D95319','LineWidth',0.05)
-
-stairs(x,[globalCon.consumptionPred(1:80);globalCon.consumptionPred(80)],'Color','#4DBEEE','LineWidth',0.05)
-stairs(x,[globalCon.consumptionPred(1:80);globalCon.consumptionPred(80)],'Color','#A2142F','LineWidth',0.05)
 
 
 x=0:80 
@@ -304,7 +294,11 @@ xlim([0 104])
     xlabel('Time [h_a]')
 set(gca,'fontname','times')
 
-lgd = legend(" Prediction", "Global controller", "Commanded"," Distributed controller",'Pred global','Pred distributed', 'Orientation','Horizontal')
+h=[p1(1),p2(1),p3(1),p4(1),p5(1),p6(1)]; 
+
+%lgd = legend(h," Prediction", "Global controller", "Commanded"," Distributed controller",'Pred global','Pred distributed', 'Orientation','Horizontal')
+lgd = legend(h," Commanded", "Prediction"," Global",'PPC con','Pred Global','Pred PPC con', 'Orientation','Horizontal')
+
  
 lgd.Layout.Tile = 'south';
 

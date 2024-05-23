@@ -29,9 +29,9 @@ for index=2:size(indices,2)
 end 
 
 
-    x1used=ADMM_1.x_i(:,end);
-    x2used=ADMM_2.x_i(:,end);
-    x3used=ADMM_3.x_i(:,end);
+%     x1used=ADMM_1.x_i(:,end);
+%     x2used=ADMM_2.x_i(:,end);
+%     x3used=ADMM_3.x_i(:,end);
 
 %%  Checking for consensus! 
 
