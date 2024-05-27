@@ -11,7 +11,6 @@ addpath("..\Global controller\Simple Simulink implemtation\Functions\")
 addpath("..\Global controller\Simple Simulink implemtation\")
 addpath("..\")
 addpath("Simulink implementation\")
-addpath("Simulink implementation\Subsystem reference\")
 c=scaled_standard_constants; 
 %% Define simulation time 
 simHour=24*10+1; 

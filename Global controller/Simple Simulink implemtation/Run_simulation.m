@@ -17,7 +17,7 @@ c.Tsim=num2str(simTime);
 %% Running the simulation 
 simData=sim('GlobalMPC.slx',"StartTime",'0',"StopTime",c.Tsim,'FixedStep','200');
 %% Saving the data from the simulation 
-save('global_controller_465_mm.mat')
+%save('global_controller_465_mm.mat')
 
 
 
