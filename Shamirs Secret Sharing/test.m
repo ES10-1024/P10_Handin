@@ -12,7 +12,7 @@ addpath("..\")
 c=scaled_standard_constants;
 
 %% Defining the secret and scaling it 
-secret=ones(48,3)*200; 
+secret=ones(48,3)*201; 
 %Scaling and rounding the secret: 
 secretScaling=round(secret*c.scaling);
 %% Making 3 polynium with the secret: 
