@@ -9,7 +9,6 @@ close all
 addpath("..\..\")
 addpath("..\..\Global controller\Subsystem Reference\")
 addpath("..\..\Global controller\Simple Simulink implemtation\Functions\")
-addpath("..\..\Shamirs Secret Sharing\Functions\")
 
 addpath("Functions\")
 addpath("Subsystem Reference\")
