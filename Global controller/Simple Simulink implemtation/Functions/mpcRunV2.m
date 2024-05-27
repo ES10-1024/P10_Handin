@@ -1,10 +1,9 @@
 %% Setting up the optimization problem and solving it.
 function [up1,uAll] = mpcRunV2(data,uPrev,scaled)
 % The inputs is:
-%A struct Data which haves the demand data, electricity price, and current
+% Astruct Data which haves the demand data, electricity price, and current
 %volume in the water tower 
-% The previous prediction of inputs uPrev (The entire control  horizon
-% from the last should be in this 
+% The previous solvetion to use a initlave values for the solve  
 % scaled, if true the optimization problem is caled 
 
 %The output is: 
@@ -22,6 +21,7 @@ c.V=data.V(end,1);
 total=c.Nc*c.Nu;
 
 % Need a few empty matrix to allow for the change in option for the solver
+% (this is done later!) 
 Aeq=[];
 beq=[];
 lb=[];
@@ -96,13 +96,10 @@ BB=[B.pumpL;B.extract1;B.pumpU1;B.extract2;B.pumpU2;B.towerL;B.towerU];
 %% Defining cost functions: 
 
 % Water level in water tower (need for the cost functions)
- h=@(u) 1/c.At*(c.A_2*(c.A_1*c.ts*u/3600-c.ts*c.d/3600)+c.V);
- %h=@(u) 0; 
-  
+ h=@(u) 1/c.At*(c.A_2*(c.A_1*c.ts*u/3600-c.ts*c.d/3600)+c.V);  
 
 %Different cost function if it is the scaled version or not  
-if scaled == false 
-
+if scaled == false  %not scaled cost function
 
     %Defining part which is about the elevation and water height: 
     height1=@(u) c.A_31*u/3600.*(c.g0*c.rhoW*(h(u)+c.z1));
@@ -130,7 +127,7 @@ if scaled == false
     %cost function not being scaled, and setting the alogrithm to be sqp: 
     options = optimoptions(@fmincon,'Algorithm','sqp','MaxFunctionEvaluations',10e6);
 
-else 
+else  %Scaled cost function! 
     %Defining part which is about the elevation and water height: 
     height1=@(u) c.A_31*u.*(c.g0*c.rhoW/c.condScaling*(h(u)+c.z1));
     
@@ -161,14 +158,13 @@ end
 %Defining that the amount of water in the tower in the start and end
 %has to be the same 
 Js= @(u) c.K*(c.ts*ones(1,c.Nc)*(c.A_1*u/3600-c.d/3600))^2;
-%Js= @(u) c.K*(abs(ones(1,c.Nc)*(c.A_1*u-c.d))); kappa=1 
 
 %Setting up the cost function: 
 costFunction=@(u) (Jp1(u)+Jp2(u)+Js(u));
 
     
 %Inital guess 
-x0 =[uPrev(2:end,1);uPrev(end,end)]; 
+x0 =[uPrev(3:end,1);uPrev(end-1:end,1)]; 
 
 %Solving the problem  
 u_hat = fmincon(costFunction,x0,AA,BB,Aeq,beq,lb,ub,nonlcon,options);

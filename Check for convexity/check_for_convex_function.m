@@ -5,19 +5,20 @@ clear
 clc 
 close all 
 
-%Adding a few functions to the path. 
+%% Adding a few functions to the path. 
 addpath("..\")
 addpath("..\Global controller\Simple Simulink implemtation\Functions\")
 
-%Loading in the scaled electricty price 
+%% Loading in the scaled electricty price 
 c=scaled_standard_constants; 
-%Selected the hour which is desired to look at: 
+
+%% Selected the hour which is desired to look at: 
 hour=165;  
 currentTime=hour*c.ts;
-%Only working with the current and one future time step: 
+%% Only working with the current and one future time step: 
 c.Nc=2;
 
-%Getting the electricty and demand 
+%% Getting the electricty and demand 
 [c.Je] = ElectrictyPrices(currentTime); 
 c.Je=c.Je/norm(c.Je); 
 c.Je=c.Je(1:c.Nc); 
@@ -67,10 +68,10 @@ syms H(u1,u2,u3,u4)
 
 %% Defining cost functions 
 
-% Water level in water tower (need for the cost functions)
+% Water level in water tower 
 h= 1/c.At*(c.A_2*(c.A_1*c.ts*u/3600-c.ts*c.d/3600)+c.V);
 
-%Defining the cost function with regard to the elevation: 
+%Cost function with regarding the elevation: 
 height1=c.g0*c.rhoW/10000*(h+c.z1);
 
 height2= c.g0*c.rhoW/10000*(h+c.z2); 
@@ -102,7 +103,7 @@ costFunction=Jl1+Jl2+Js;
 
 H(u)=hessian(costFunction,[u1 u2 u3 u4]); 
 
-%% Going though a  some of the mass flows to determine if the hessian is positive semidefint
+%% Going though some of the mass flows to determine if the hessian is positive semidefint
 % for these values. This is determinted by seeing if the lowest eigenvalue is below zero, 
 % if this is the case it is not positive semidefinite 
 

@@ -8,7 +8,6 @@ close all
 addpath("..\Global controller\Subsystem Reference\")
 addpath("..\Global controller\Simple Simulink implemtation\Functions\")
 addpath("..\Global controller\Simple Simulink implemtation\")
-addpath("..\Consensus ADMM\Functions\")
 addpath("..\Consensus ADMM\Simulink implementing\")
 addpath("..\Consensus ADMM\Simulink implementing\Functions\")
 addpath("..\Consensus ADMM\Simulink implementing\Subsystem Reference\")
