@@ -10,4 +10,4 @@ Spring 2024
 
 Authors: Fie Ørum, Lau Lauridsen, Simon Johansen
 
-The theses can be found at Aalborg University Library (www.aub.aau.dk)
+The thesis can be found at Aalborg University Library (www.aub.aau.dk)
