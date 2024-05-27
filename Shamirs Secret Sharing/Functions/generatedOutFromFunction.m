@@ -1,4 +1,4 @@
-function [yOut] = generatedOutFromFunction(secret) 
+function [share] = generatedOutFromFunction(secret) 
 %Here it is desired to determine the output from function based on random b
 %and c values, where a is the secret
 
@@ -6,7 +6,7 @@ function [yOut] = generatedOutFromFunction(secret)
 cc=scaled_standard_constants;
 
 %Predetermining the output size 
-yOut=zeros(cc.Nu+1,size(secret,1)); 
+share=zeros(cc.Nu+1,size(secret,1)); 
 
 %Going though each entries in the matrix, and hidding the secret using a
 %function 
@@ -24,8 +24,8 @@ for index=1:size(secret,1)
     %Making matrix of the different x values (rho 1 x=1, rho 2 x=2, rho 3 x=3): 
     Q=[1 1 1; 1 2 4; 1 3 9];
     
-    %Making the output for the function: 
-    yOut(:,index)=Q*constants; 
+    %Determining the share value: 
+    share(:,index)=mod(Q*constants,cc.prime); 
 end 
 
 end
