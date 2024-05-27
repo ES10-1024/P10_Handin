@@ -56,6 +56,8 @@ VolumePred = ModelPredicted(Volume(end-1),simData.logsout{2}.Values.Data(end,:)'
 %% Loading in reference controller water volume 
 addpath("..\..\Reference controller\")
 refCon=load('Reference_controller.mat') 
+%% Adding flows up 
+refCon.summedFlows=refCon.RefCon.simData.logsout{1}.Values.Data+refCon.RefCon.simData.logsout{2}.Values.Data;
 
 %% Making the plot 
 x=0:size(summedMassflow,1);
@@ -80,10 +82,17 @@ set(gca,'fontname','times')
 x=0:size(summedMassflow,1);
 nexttile
 hold on 
+%ON/OFF controller: 
+plot(refCon.RefCon.simData.logsout{11}.Values.Time(refCon.startIndex:end)*6/3600-1,refCon.summedFlows(refCon.startIndex:end),'color','#A2142F')
+%global controller:
+
 %ylabel('$\sum q_i$ [m$^{3}$/h]', 'Interpreter', 'latex');
-stairs(x,[summedMassflow;summedMassflow(end)],'color','#77AC30') 
+stairs(x,[summedMassflow;summedMassflow(end)],'color','#7E2F8E') 
 x=80:80+24-1;
 stairs(x,predSummedMassFlows,'color','#EDB120')
+
+
+
     ylabel('Sum of flows [m^3/h]')
     xlabel('Time [h_a]')
     grid on
@@ -97,6 +106,7 @@ hold on
 x=0:size(Volume,1)-1;
 p3=plot(x,Volume*1000,'color','#7E2F8E')
 p4=plot(refCon.RefCon.simData.logsout{11}.Values.Time(refCon.startIndex:end)*6/3600-1,refCon.RefCon.simData.logsout{11}.Values.Data(refCon.startIndex:end)/1000*c.At*1000,'color','#A2142F')
+
 x=80:80+24-1;
 plot(x,VolumePred*1000)
 yline(c.Vmax*1000)
@@ -141,7 +151,7 @@ xlim([0 104])
     xlabel('Time [h_a]')
 set(gca,'fontname','times')
 h = [p1(1),p2(1),p3(1),p4(1)]; 
-lgd = legend(h," Commanded", "Predictionn", "Global controller"," Reference controller", 'Orientation','Horizontal')
+lgd = legend(h," Commanded", "Predictionn", "Global controller measured/commanded"," ON/OFF controller measured", 'Orientation','Horizontal')
  
 lgd.Layout.Tile = 'south';
 

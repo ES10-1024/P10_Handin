@@ -297,8 +297,8 @@ set(gca,'fontname','times')
 h=[p1(1),p2(1),p3(1),p4(1),p5(1),p6(1)]; 
 
 %lgd = legend(h," Prediction", "Global controller", "Commanded"," Distributed controller",'Pred global','Pred distributed', 'Orientation','Horizontal')
-lgd = legend(h," Commanded", "Prediction"," Global",'PPC con','Pred Global','Pred PPC con', 'Orientation','Horizontal')
-
+lgd = legend(h," Commanded", "Prediction"," Global controller measured/commanded",'Distributed controller measured/commanded','Global controller prediction','Distributed controller prediction', 'Orientation','Horizontal')
+lgd.NumColumns = 3;
  
 lgd.Layout.Tile = 'south';
 

@@ -494,4 +494,41 @@ xlabel('Iterations')
 % set(gca,'fontname','times')
 exportgraphics(f,'Plots/primal_dual_residual_varying.pdf', 'ContentType', 'image')
 
+%% Checking if consensus is present: 
+%%  Checking for consensus! 
+iterationNumber=200;
+for time=1:1000
+
+    %Skal laves om til at anvende det noget fra simulering! 
+        [consumptionPred,consumptionActual(time,:)] = consumption(time*c.ts);
+        %Moving the predicted consumption to a struct for each use to functions
+        c.d=consumptionPred;
+        
+        %Determing the volume for each, of the 3 stakeholders 
+        
+        
+        Vx1(:,time)=ModelPredicted(c.V,Xsave(:,1,iterationNumber,time),c.d);
+        Vx2(:,time)=ModelPredicted(c.V,Xsave(:,2,iterationNumber,time),c.d);
+        Vx3(:,time)=ModelPredicted(c.V,Xsave(:,3,iterationNumber,time),c.d);
+        
+        %Determing difference: 
+        Diff1(:,time)=abs(Vx1(:,time) - Vx2(:,time)); 
+        Diff2(:,time)=abs(Vx1(:,time) - Vx3(:,time));
+        Diff3(:,time)=abs(Vx2(:,time) - Vx3(:,time)); 
+
+        maxDiff(:,time)=max(max(Diff1(:,time),Diff2(:,time)),Diff3(:,time));
+
+end 
+maxDiff=maxDiff*1000;
+%% Making the plot 
+f=figure
+plot(maxDiff(end,:))
+set(gca,'fontname','times')
+xlabel('Time [h_a]')
+ylabel('Max abs diff pred water volume [L]')
+grid 
+a = annotation('rectangle',[0 0 0 0],'Color','w');
+exportgraphics(f,'plots/max_diff_from_consensus.pdf','ContentType','vector')
+delete(a)
+
 
