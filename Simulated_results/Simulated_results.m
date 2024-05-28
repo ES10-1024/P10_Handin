@@ -11,7 +11,6 @@ addpath("..\Global controller\Simple Simulink implemtation\")
 addpath("..\Consensus ADMM\Simulink implementing\")
 addpath("..\Consensus ADMM\Simulink implementing\Functions\")
 addpath("..\Consensus ADMM\Simulink implementing\Subsystem Reference\")
-addpath("..\Shamirs Secret Sharing\Functions\")
 addpath("..\")
 c=scaled_standard_constants; 
 %% Define simulation time 
